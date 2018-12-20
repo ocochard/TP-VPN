@@ -88,13 +88,7 @@ for i in `jot $BIN_MAX`; do
         cp /etc/ssh/ssh_host_rsa_key.pub /tmp/succursale_$i/cles-ssh/cle_ssh_publique_concentrateur
 		cp /home/succursale_${i}/.ssh/* /tmp/succursale_$i/cles-ssh/
         # Permit users to login as root with its SSH key
-        # (used for SSH routed tunnel)
-        (cd /home/succursale_${i}/.ssh;
-        cat id_rsa.pub >> /root/.ssh/authorized_keys
-        mv id_rsa.pub authorized_keys
-        rm id_rsa
-        rm cle_ssh_publique_concentrateur
-        )
+        cp /home/succursale_$i/.ssh/id_rsa.pub /home/succursale_$i/.ssh/authorized_keys
         if [ ! -f ${EASYRSA_PKI}/issued/succursale_$i.crt ];then
 		EASYRSA_REQ_CN="succursale_$i"; export EASYRSA_REQ_CN
 		easyrsa build-client-full succursale_$i nopass
@@ -107,6 +101,7 @@ for i in `jot $BIN_MAX`; do
 			cp ${EASYRSA_PKI}/${file} /tmp/succursale_$i/certifs-openvpn/
 		done
         tar -cf /tmp/succursale_${i}_cles.tgz -C /tmp/succursale_$i .
+		rm -rf /tmp/succursale_$i
         echo "route 172.16.${i}.0 255.255.255.0" >> /usr/local/etc/openvpn/openvpn.conf
 	echo "route-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/openvpn.conf
         echo "iroute 172.16.${i}.0 255.255.255.0" > /usr/local/etc/openvpn/ccd/succursale_${i}

@@ -37,7 +37,8 @@ for PACKAGE in ${PKG_LIST}; do
   pkg info ${PACKAGE} || pkg install -y ${PACKAGE}
 done
 
-x
+# Configuration du dossier PKI pour easyrsa
+echo 'set_var EASYRSA_PKI             "$EASYRSA/pki"' >> /usr/local/share/easy-rsa/vars
 
 cd /tmp
 [ -f preparation-server.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-server.sh
