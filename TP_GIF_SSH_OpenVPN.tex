@@ -498,13 +498,13 @@ Vous remarquerez que cette utilisation ne répond pas exactement à notre besoin
 \end{center}
 
 \subsection{Génération des certificats}
-Cet exercice va vous demander de créer votre propre autorisé de certification et donc de générer votre fichier ca.crt : Attention de ne  pas mélanger ce nouveau avec celui de l'exercice précédent car ils portent le même nom. De plus, lors de la copie scp, vérifiez que vous n'écrasez pas un fichier déjà existant sur la machine du binôme voisin.
+Cet exercice va vous demander de créer votre propre autorité de certification et donc de générer votre fichier ca.crt : Attention de ne  pas mélanger ce nouveau avec celui de l'exercice précédent car ils portent le même nom. De plus, lors de la copie scp, vérifiez que vous n'écrasez pas un fichier déjà existant sur la machine du binôme voisin.
 
 Générer les répertoires de clé avec la commande \shellcmd{easyrsa init-pki}. Cette commande va créer le répertoire /usr/local/share/easy-rsa/pki qui contiendra l'ensemble des certificats que vous allez créer.
 
 Lancer le pré calcul des données pour l’algorithme de Diffie-Hellman qui servira à l’échange de clefs par la suite par la commande \shellcmd{easyrsa gen-dh}.
 
-Puis exécutez le script \shellcmd{easyrsa build-ca nopass} et examinez le contenu du répertoire keys/.
+Puis exécutez le script \shellcmd{easyrsa build-ca nopass} et examinez le contenu du répertoire /usr/local/share/easy-rsa/pki/.
 
 \cadre{\question{Question}
 \begin{enumerate}
@@ -514,7 +514,7 @@ Puis exécutez le script \shellcmd{easyrsa build-ca nopass} et examinez le conte
 \end{enumerate}
 }
 
-Exécutez le script \shellcmd{easyrsa build-server-full concentrateur NOM-DE-VOTRE-ROUTEUR nopass} puis examinez le contenu du répertoire keys/.
+Exécutez le script \shellcmd{easyrsa build-server-full concentrateur NOM-DE-VOTRE-ROUTEUR nopass} puis examinez le contenu du répertoire pki/.
 
 \cadre{\question{Question}
 \begin{enumerate}

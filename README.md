@@ -50,7 +50,7 @@ Redémarrer le système à la fin, puis se connecter en root sur la machine et l
 
 ```
 cd /tmp
-fetch http://dev.bsdrp.net/scripts/TP/preparation-master.sh
+fetch --no-verify-peer https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-master.sh
 sh preparation-master.sh
 shutdown -p
 ```
