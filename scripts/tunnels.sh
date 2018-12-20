@@ -11,14 +11,11 @@ if [ ! $(whoami) = "root" ]; then
     return 1
 fi
 echo "Do not exit this script!"
-# There is a conflict between GIF tunnels and OpenVPN tunnels
-# TO DO: 2 differents jails servers ?
 while true; do
     for bin in `jot ${BIN_MAX}`;do
-		# Testing if gif tunnel is up and remote peer reachable
         if ifconfig gif${bin} > /dev/null 2>&1; then
             if ping -t 1 -c 2 ${WAN_NET4}.${bin}.2 > /dev/null 2>&1;then
-		# Need to test if route allready installed
+		#Need to test if route allready installed
 		if route get ${LAN_NET4}.${bin}.0/24 | grep -q 'interface: tun98'; then
 		    echo "Adding GIF routes for binome ${bin}"
 		    route del ${LAN_NET4}.${bin}.0/24 > /dev/null 2>&1 || echo "Warning: Can't delete ${LAN_NET4}.${bin}.0/24"

@@ -78,7 +78,7 @@ Ce TP se découpe en plusieurs exercices du plus simple au plus complexe, tous p
 \item Configuration d'un serveur OpenVPN et la création/répudiation de certificat (exercice par paire de binôme).
 \end{enumerate}
 \subsection{Grille de notation}
-La différence entre deux techniciens ce fait uniquement à la qualité du travail écrit rendu. La notation de votre rapport prendra donc en compte:
+La différence entre deux techniciens se fait uniquement à la qualité du travail écrit rendu. La notation de votre rapport prendra donc en compte:
 \begin{enumerate}
 \item La documentation de l'ensemble de vos actions. Ce qui inclu la descriptions des commandes passées pour la préparation de vos environnements, le nettoyage éventuellement necessaire entre les différents exercices, les exercices eux-mêmes et vos résolutions de problèmes rencontrés;
 \item La réponse aux questions numérotées;
@@ -91,7 +91,7 @@ Concernant l'insertion de captures d'écrans qui sont fortement conseillées:
 \begin{itemize}
 \item Elles seront au format bitmap (graphique) si la source de donnée est graphique (capture d'écran de l'environement graphique des fenêtres Wireshark ou du navigateur);
 \item Elle seront au format texte (simple copier/coller) si la source de donnée est le texte du terminal (vos commandes et leurs résultats, fichiers de configuration commentés, extraits de man page ou de fichiers de logs).
-\end{itemize} 
+\end{itemize}
 
 \subsection{Environnement simulé}
 L'environnement du TP simule le réseau du siège d'une entreprise reliée par VPN à ses succursales à travers un réseau public (ici Internet):
@@ -100,7 +100,7 @@ L'environnement du TP simule le réseau du siège d'une entreprise reliée par V
 \end{center}
 %\clearpage
 \subsection{FreeBSD}
-Ce TP utilise un système d'exploitation libre de la famille des Unix\footnote{GNU/Linux n'est pas un Unix.}. L'avantage d'utiliser FreeBSD dans notre cas est sa simplicité de configuration (très peu de fichiers de configuration à modifier) ainsi que sa documentation très complète (pages man et guide utilisateur). De plus, la robustesse de sa pile IP et sa licence BSD en fait un système très couramment utilisé sur les équipements réseau et appliances (routeurs et commutateurs Juniper, Firewall Netasq, NAS NetApp et Isilon, Netflix OpenConnect, console Sony PS4, etc…).
+Ce TP utilise un système d'exploitation libre de la famille des Unix\footnote{GNU/Linux n'est pas un Unix.}. L'avantage d'utiliser FreeBSD dans notre cas est sa simplicité de configuration (très peu de fichiers de configuration à modifier) ainsi que sa documentation très complète (pages man et guide utilisateur). De plus, la robustesse de sa pile IP et sa licence BSD en fait un système très couramment utilisé sur les équipements réseau et appliances (routeurs et commutateurs Juniper, Firewall Netasq, NAS NetApp et Isilon, Netflix OpenConnect, console Sony PS4, etc.).
 
 Particularité de FreeBSD pour les habitués à GNU/Linux : Le nom des périphériques (interfaces réseau, disques, etc…) n'est pas identifié par des noms génériques (eth0 pour la première carte réseau) mais par des noms liés aux drivers utilisés (bge0 pour la première carte Ethernet utilisant un pilote Broadcom, fxp0 pour une carte réseau Intel EtherExpress PRO/100, em0 pour des Intel Pro/1000, etc…).
 
@@ -138,6 +138,7 @@ Sur la clé USB amorçable qui vous a été remise, vous y trouverez une install
 \begin{itemize}
 \item OpenVPN;
 \item mohawk: serveur web;
+\item vim et nano: Éditeurs de texte supplémentaires;
 \item w3m: navigateur web en mode texte (console).
 \end{itemize}
 Voici les paramètres de connexion pour se connecter à la console :
@@ -172,7 +173,6 @@ new file "mon-fichier.txt"
 \end{verbatim}
 \normalsize
 La première section du haut rappel la liste des commandes possibles. Par exemple elle indique que pour afficher le menu il faut appuyer sur la touche escape. Le caractère \textasciicircum \ indique de garder enfoncé la touche contrôle (Ctrl) pendant que vous appuierez sur la touche correspondante. Par exemple, pour lancer la recherche d'un mot, c'est la combinaison Ctrl + y.
-Les éditeurs de textes vim et nano ont aussi été installés.
 \subsubsection{Organisation de la configuration}
 L'organisation détaillée des dossiers est expliquée dans \shellcmd{man hier}:
 \begin{itemize}
@@ -192,16 +192,17 @@ Pour découvrir les différentes options de ce fichier, inspirez-vous du fichier
 Il est possible d’afficher et modifier le contenu du fichier /etc/rc.conf sans passer par un éditeur texte en utilisant la commande \shellcmd{sysrc} :
 \begin{itemize}
 \item Ajoute ou modifie la variable dans /etc/rc.conf: \shellcmd{sysrc variable=valeur}
+\item Active un service: \shellcmd{service NOM-DU-SERVICE enable}
 \item Affiche la liste des variables modifiées: \shellcmd{sysrc -a}
 \end{itemize}
 Commencer par activer le daemon SSH :
 \begin{enumerate}
-\item Ajouter la ligne \shellcmd{sshd\_enable="YES"} dans le fichier /etc/rc.conf;
+\item Ajouter la ligne \shellcmd{sshd\_enable="YES"} dans le fichier /etc/rc.conf ou en utilisant la commande \shellcmd{service sshd enable};
 \item Lancer le démarrage du service par la commande \shellcmd{service sshd start}.
 \end{enumerate}
 Lors du lancement de celui-ci, il va générer différentes clés SSH pour lui-même et afficher l'emprunte de ces clés: Notez-les car elles vous seront demandées ultérieurement.
 
-Les scripts de démarrage des services systèmes se trouvent dans /etc/rc.d et ceux des applications tierces (OpenVPN, mohawk) dans /usr/local/etc/rc.d. Il est possible d'afficher la liste complète des scripts RC disponibles par la commande \shellcmd{service~-l} et d'afficher la liste des services activés par la commande \shellcmd{service~-e}. 
+Les scripts de démarrage des services systèmes se trouvent dans /etc/rc.d et ceux des applications tierces (OpenVPN, mohawk) dans /usr/local/etc/rc.d. Il est possible d'afficher la liste complète des scripts RC disponibles par la commande \shellcmd{service~-l} et d'afficher la liste des services activés par la commande \shellcmd{service~-e}.
 
 Remarques concernant quelques services systèmes particuliers :
 \begin{itemize}
@@ -373,8 +374,8 @@ Le PC «~routeur~» va lancer un tunnel SSH à destination du Concentrateur SSH/
 Pour activer cette redirection de port, vous allez à partir du PC «~routeur SSH/VPN~» :
 \begin{enumerate}
 \item Vérifiez que vous travaillez bien sous le compte simple utilisateur et non pas root ;
-\item Protéger vos clés pour que personne d'autre que votre utilisateur ne puisse y accéder par la commande \shellcmd{chmod 600 id\_rsa*}. Le client SSH vérifiera les droits d'accès et refusera d'utiliser une clé dont les permissions d'accès ne sont pas assez restrictives ;
-\item Lancer la commande suivante (sur une seule ligne) : \shellcmd{ssh -N -L8080:172.16.254.1:80 -g~-i~/chemin/votre.clé.ssh~succursale\_BIN@2.2.2.254}
+\item Protéger votre clé privé pour que personne d'autre que votre utilisateur ne puisse y accéder par la commande \shellcmd{chmod 600 id\_rsa}. Le client SSH vérifiera les droits d'accès et refusera d'utiliser une clé dont les permissions d'accès ne sont pas assez restrictives ;
+\item Lancer la commande suivante (sur une seule ligne) : \shellcmd{ssh -N -L8080:172.16.254.1:80 -g~-i~/chemin/votre.clé.ssh~succursale\_BIN@10.0.0.254}
 \item Puis vérifier le fonctionnement en lançant un navigateur à partir de votre PC «~poste de travail~» à destination de votre routeur SSH/VPN sur son port 8080~: 
 \shellcmd{http://172.16.BIN.254:8080} et/ou \shellcmd{http://[fc00:BIN::254]:8080}
 \end{enumerate}

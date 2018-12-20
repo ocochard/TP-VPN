@@ -27,6 +27,7 @@ openvpn
 mohawk
 w3m
 vim-console
+nano
 '
 
 ASSUME_ALWAYS_YES=yes
@@ -37,18 +38,10 @@ for PACKAGE in ${PKG_LIST}; do
 done
 
 x
-#if [ -d ${EASYRSA_DIR} ]; then
-#  echo "Converting easy-rsa bash script to tcsh script"
-#  sed 's/export/setenv/;s/=/ /' ${EASYRSA_DIR}/vars > ${EASYRSA_DIR}/vars.tcsh 
-#  mv ${EASYRSA_DIR}/vars ${EASYRSA_DIR}/vars.bash.old
-#  mv ${EASYRSA_DIR}/vars.tcsh ${EASYRSA_DIR}/vars
-#else
-#  echo "ERROR: No easy-RSA installed?"
-#fi
 
 cd /tmp
-[ -f preparation-server.sh ] || fetch http://dev.bsdrp.net/scripts/TP/preparation-server.sh
-[ -f tunnels.sh ] || fetch http://dev.bsdrp.net/scripts/TP/tunnels.sh
+[ -f preparation-server.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-server.sh
+[ -f tunnels.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/tunnels.sh
 
 # Modification du fstab pour prendre en compte le label UFS
 tunefs -p /dev/vtbd0s1a > /tmp/tunefs.txt 2>&1

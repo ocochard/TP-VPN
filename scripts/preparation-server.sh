@@ -26,10 +26,6 @@ fi
 service sshd onestart || \
   die "Can't start SSHd for generating host key"
 
-# Delete ECSDA and ed25519 keys (avoid to disturb student)
-rm /etc/ssh/ssh_host_ecdsa_key*
-rm /etc/ssh/ssh_host_ed25519_key*
-
 service sshd onestop || die "Can't stop SSHd"
 
 ### Creating Users ###
@@ -88,8 +84,9 @@ for i in `jot $BIN_MAX`; do
         [ -f /home/succursale_$i/.ssh/authorized_keys ] && \
           rm /home/succursale_$i/.ssh/*
         su -l succursale_${i} -c 'ssh-keygen -b 4096 -f /home/$USER/.ssh/id_rsa -N ""'
-        cp /etc/ssh/ssh_host_rsa_key.pub /home/succursale_${i}/.ssh/cle_ssh_publique_concentrateur
-        tar -cf /tmp/succursale_${i}_cles_ssh.tgz -C /home/succursale_${i}/.ssh .
+		mkdir -p /tmp/succursale_$i/cles-ssh
+        cp /etc/ssh/ssh_host_rsa_key.pub /tmp/succursale_$i/cles-ssh/cle_ssh_publique_concentrateur
+		cp /home/succursale_${i}/.ssh/* /tmp/succursale_$i/cles-ssh/
         # Permit users to login as root with its SSH key
         # (used for SSH routed tunnel)
         (cd /home/succursale_${i}/.ssh;
@@ -101,13 +98,15 @@ for i in `jot $BIN_MAX`; do
         if [ ! -f ${EASYRSA_PKI}/issued/succursale_$i.crt ];then
 		EASYRSA_REQ_CN="succursale_$i"; export EASYRSA_REQ_CN
 		easyrsa build-client-full succursale_$i nopass
+		mkdir -p /tmp/succursale_$i/certifs-openvpn
 		#Testing correct file size
 		FILE_LIST="ca.crt issued/succursale_${i}.crt private/succursale_${i}.key"
 		for file in ${FILE_LIST}; do
 		  [ -s ${EASYRSA_PKI}/${file} ] || \
 		    die "Error with file ${EASYRSA_PKI}/${file}: Missing or empty"
+			cp ${EASYRSA_PKI}/${file} /tmp/succursale_$i/certifs-openvpn/
 		done
-                tar -cf /tmp/succursale_${i}_cles_openvpn.tgz -C ${EASYRSA_PKI} ca.crt issued/succursale_${i}.crt private/succursale_${i}.key
+        tar -cf /tmp/succursale_${i}_cles.tgz -C /tmp/succursale_$i .
         echo "route 172.16.${i}.0 255.255.255.0" >> /usr/local/etc/openvpn/openvpn.conf
 	echo "route-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/openvpn.conf
         echo "iroute 172.16.${i}.0 255.255.255.0" > /usr/local/etc/openvpn/ccd/succursale_${i}
@@ -202,3 +201,6 @@ service sshd restart && \
 sysrc openvpn_enable="YES"
 service openvpn restart && \
   echo "Warning: Can t reload openvpn"
+
+echo "WARNING: NEED TO CHANGE ROOT password now!"
+

@@ -10,7 +10,6 @@ Processus de création de l'image à partir d'un poste FreeBSD:
 pkg install vm-bhyve
 mkdir /home/olivier/VMs
 sysrc vm_dir="/home/olivier/VMs"
-"service vm enable
 vm init
 echo 'disk0_size="2000000000"' >> /home/olivier/VMs/.templates/default.conf
 vm switch create public
@@ -63,8 +62,9 @@ dd if=/home/olivier/VMs/iutstmalo/disk0.img of=/dev/da0 bs=512k
 ```
 
 ## Génération du PDF de support de TP
-Le support est un document latex, a générer comme ceci depuis un FreeBSD:
+Le support est un document latex, a générer comme ceci depuis un FreeBSD (executer 2 fois xelatex pour la génération de la table des matières):
 ```
 pkg install tex-formats tex-xetex
+xelatex TP_GIF_SSH_OpenVPN.tex
 xelatex TP_GIF_SSH_OpenVPN.tex
 ```
