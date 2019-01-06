@@ -56,7 +56,7 @@ shutdown -p
 ```
 
 ## Transfert de l'image disque sur une clé USB (2Go)
-Une fois terminé, l'image disque peux être transférée sur clé USB
+Une fois terminé, l'image disque peux être transférée sur clé USB avec un simple dd (ou Win32 Disk Imager sous windows).
 ```
 dd if=/home/olivier/VMs/iutstmalo/disk0.img of=/dev/da0 bs=512k
 ```
