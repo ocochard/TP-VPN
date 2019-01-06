@@ -68,3 +68,8 @@ pkg install tex-formats tex-xetex
 xelatex TP_GIF_SSH_OpenVPN.tex
 xelatex TP_GIF_SSH_OpenVPN.tex
 ```
+
+sur un Mac, après avoir installé MacTex c'est:
+```
+/Library/TeX/texbin/xelatex TP_GIF_SSH_OpenVPN.tex
+```
