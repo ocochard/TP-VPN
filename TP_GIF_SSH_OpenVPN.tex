@@ -93,6 +93,7 @@ Concernant l'insertion de captures d'écrans qui sont fortement conseillées:
 \item Elle seront au format texte (simple copier/coller) si la source de donnée est le texte du terminal (vos commandes et leurs résultats, fichiers de configuration commentés, extraits de man page ou de fichiers de logs).
 \end{itemize}
 
+\clearpage
 \subsection{Environnement simulé}
 L'environnement du TP simule le réseau du siège d'une entreprise reliée par VPN à ses succursales à travers un réseau public (ici Internet):
 \begin{center}
@@ -238,7 +239,7 @@ Voici le schéma logique de la maquette :
 \includegraphics[width=0.9\linewidth]{schema-complet}
 \end{center}
 
-Note : Aux adresses hôtes IPv4 notées .254, vous utiliserez l'équivalent visuel en IPv6 (par exemple l'adresse IPv6 interne du routeur binôme 20 est \shellcmd{fc00:20::254/64} et l'IPv4 : \shellcmd{172.16.20.254/24}).
+Note : Définissez un numéro de binôme (entre 1 et 20) unique entre vous. Aux adresses hôtes IPv4 notées .254, vous utiliserez l'équivalent visuel en IPv6 (par exemple l'adresse IPv6 interne du routeur binôme 20 est \shellcmd{fc00:20::254/64} et l'IPv4 : \shellcmd{172.16.20.254/24}).
 
 \subsection{Votre environnement}
 Pour la réalisation de ce TP vous utiliserez 2 PCs :
@@ -375,7 +376,7 @@ Pour activer cette redirection de port, vous allez à partir du PC «~routeur SS
 \begin{enumerate}
 \item Vérifiez que vous travaillez bien sous le compte simple utilisateur et non pas root ;
 \item Protéger votre clé privé pour que personne d'autre que votre utilisateur ne puisse y accéder par la commande \shellcmd{chmod 600 id\_rsa}. Le client SSH vérifiera les droits d'accès et refusera d'utiliser une clé dont les permissions d'accès ne sont pas assez restrictives ;
-\item Lancer la commande suivante (sur une seule ligne) : \shellcmd{ssh -N -L8080:172.16.254.1:80 -g~-i~/chemin/votre.clé.ssh~succursale\_BIN@10.0.0.254}
+\item Lancer la commande suivante (sur une seule ligne) : \shellcmd{ssh -N -L8080:172.16.254.1:80 -g~-i~/chemin/votre.clé.ssh~succursale\_BIN@2.2.2.254}
 \item Puis vérifier le fonctionnement en lançant un navigateur à partir de votre PC «~poste de travail~» à destination de votre routeur SSH/VPN sur son port 8080~:
 \shellcmd{http://172.16.BIN.254:8080} et/ou \shellcmd{http://[fc00:BIN::254]:8080}
 \end{enumerate}

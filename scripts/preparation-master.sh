@@ -13,10 +13,11 @@ sysrc -f /boot/loader.conf autoboot_delay="2"
 grep -q CLICOLOR /etc/csh.cshrc ||  echo "setenv CLICOLOR" >> /etc/csh.cshrc
 grep -q nobeep /etc/csh.cshrc || echo "set nobeep" >> /etc/csh.cshrc
 
-# Creation du compte etudiant
+# Creation du compte etudiant et ajout dans le groupe wheel
 if ! grep -q etudiant /etc/passwd; then
 	echo "etudiant::::::::/bin/csh:iut" > /tmp/ajout.user
 	adduser -f /tmp/ajout.user
+	pw usermod etudiant -G wheel
 fi
 
 echo "Installation des packages"

@@ -62,14 +62,9 @@ dd if=/home/olivier/VMs/iutstmalo/disk0.img of=/dev/da0 bs=512k
 ```
 
 ## Génération du PDF de support de TP
-Le support est un document latex, a générer comme ceci depuis un FreeBSD (executer 2 fois xelatex pour la génération de la table des matières):
+Pour la converstion du document latex en pdf, depuis un FreeBSD (```pk
+g install tex-formats tex-xetex``) ou Mac (après avoir installé MacTex) il faut executer 2 fois xelatex pour la génération de la table des matières):
 ```
-pkg install tex-formats tex-xetex
 xelatex TP_GIF_SSH_OpenVPN.tex
 xelatex TP_GIF_SSH_OpenVPN.tex
-```
-
-sur un Mac, après avoir installé MacTex c'est:
-```
-/Library/TeX/texbin/xelatex TP_GIF_SSH_OpenVPN.tex
 ```
