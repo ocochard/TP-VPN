@@ -16,7 +16,7 @@ hostname concentrateur.univ-rennes1.fr
 ### Regenerate a new host ssh keys
 echo "## Regenerate new host SSH keys ##"
 if service sshd onestatus; then
-	service sshd onestop || die "Can't stop SSHd"
+        service sshd onestop || die "Can't stop SSHd"
 fi
 if [ -f /ssh_host_dsa_key.pub ]; then
 	rm /etc/ssh/ssh_host_* || \
@@ -30,7 +30,7 @@ service sshd onestop || die "Can't stop SSHd"
 
 ### Creating Users ###
 echo "## Creating users ##"
-[ -f $USER_FILE ] && rm -rf $USER_FILE
+[ -f ${USER_FILE} ] && rm -rf ${USER_FILE}
 
 for i in `jot $BIN_MAX`; do
         #Generate user table for adduser
@@ -56,11 +56,6 @@ if [ ! -d ${EASYRSA_PKI} ];then
 	done
 fi
 
-### Create /root/.ssh directory
-# All users SSH keys will be put in /root/.ssh/authorized_keys
-mkdir -p /root/.ssh
-chmod -R 600 /root/.ssh
-
 ### OpenVPN base configuration generation
 mkdir -p /usr/local/etc/openvpn/ccd
 cat <<EOF > /usr/local/etc/openvpn/openvpn.conf
@@ -81,33 +76,33 @@ EOF
 
 ### Users main loop
 for i in `jot $BIN_MAX`; do
-	[ -f /home/succursale_$i/.ssh/authorized_keys ] && \
-		rm /home/succursale_$i/.ssh/*
-	su -l succursale_${i} -c 'ssh-keygen -b 4096 -f /home/$USER/.ssh/id_rsa -N ""'
-	mkdir -p /tmp/succursale_$i/cles-ssh
-	cp /etc/ssh/ssh_host_rsa_key.pub /tmp/succursale_$i/cles-ssh/cle_ssh_publique_concentrateur
-	cp /home/succursale_${i}/.ssh/* /tmp/succursale_$i/cles-ssh/
-	# Permit users to login as root with its SSH key
-	cp /home/succursale_$i/.ssh/id_rsa.pub /home/succursale_$i/.ssh/authorized_keys
-	if [ ! -f ${EASYRSA_PKI}/issued/succursale_$i.crt ];then
-		EASYRSA_REQ_CN="succursale_$i"; export EASYRSA_REQ_CN
+	if [ ! -f /home/succursale_${i}/.ssh/authorized_keys ]; then
+		su -l succursale_${i} -c 'ssh-keygen -b 4096 -f /home/$USER/.ssh/id_rsa -N ""'
+	fi
+	mkdir -p /tmp/succursale_${i}/cles-ssh
+	cp /etc/ssh/ssh_host_rsa_key.pub /tmp/succursale_${i}/cles-ssh/cle_ssh_publique_concentrateur
+	cp /home/succursale_${i}/.ssh/* /tmp/succursale_${i}/cles-ssh/
+	cp /home/succursale_${i}/.ssh/id_rsa.pub /home/succursale_${i}/.ssh/authorized_keys
+	if [ ! -f ${EASYRSA_PKI}/issued/succursale_${i}.crt ];then
+		EASYRSA_REQ_CN="succursale_${i}"; export EASYRSA_REQ_CN
 		easyrsa build-client-full succursale_$i nopass
 		mkdir -p /tmp/succursale_$i/certifs-openvpn
 		#Testing correct file size
 		FILE_LIST="ca.crt issued/succursale_${i}.crt private/succursale_${i}.key"
 		for file in ${FILE_LIST}; do
 			[ -s ${EASYRSA_PKI}/${file} ] || \
-		    die "Error with file ${EASYRSA_PKI}/${file}: Missing or empty"
-			cp ${EASYRSA_PKI}/${file} /tmp/succursale_$i/certifs-openvpn/
+				die "Error with file ${EASYRSA_PKI}/${file}: Missing or empty"
+			cp ${EASYRSA_PKI}/${file} /tmp/succursale_${i}/certifs-openvpn/
 		done
-		tar -cf /tmp/succursale_${i}_cles.tgz -C /tmp/succursale_$i .
-		rm -rf /tmp/succursale_$i
-		echo "route 172.16.${i}.0 255.255.255.0" >> /usr/local/etc/openvpn/openvpn.conf
-		echo "route-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/openvpn.conf
-        echo "iroute 172.16.${i}.0 255.255.255.0" > /usr/local/etc/openvpn/ccd/succursale_${i}
-		echo "iroute-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/ccd/succursale_${i}
-        # Generate user OpenVPN configuration file (used by the teacher only!)
-		cat <<EOF > /tmp/binome_${i}.openvpn.conf
+	fi
+	tar -cf /tmp/succursale_${i}_cles.tgz -C /tmp/succursale_${i} .
+	rm -rf /tmp/succursale_${i}
+	echo "route 172.16.${i}.0 255.255.255.0" >> /usr/local/etc/openvpn/openvpn.conf
+	echo "route-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/openvpn.conf
+	echo "iroute 172.16.${i}.0 255.255.255.0" > /usr/local/etc/openvpn/ccd/succursale_${i}
+	echo "iroute-ipv6 fc00:${i}::/64" >> /usr/local/etc/openvpn/ccd/succursale_${i}
+	# Generate user OpenVPN configuration file (used by the teacher only!)
+	cat <<EOF > /tmp/binome_${i}.openvpn.conf
 client
 proto udp
 dev tun
@@ -119,7 +114,6 @@ verb 4
 keepalive 10 120
 EOF
 
-	fi
 done
 
 ### Serveur virtuel derriere le concentrateur VPN et Tunnels GIFs
@@ -129,14 +123,13 @@ for i in `jot $BIN_MAX`; do
 	sysrc ifconfig_gif${i}="inet 192.168.${i}.1/31 192.168.${i}.2 tunnel 2.2.2.254 2.2.2.${i} up"
 	sysrc ifconfig_gif${i}_ipv6="inet6 fc00:bad:cafe:${i}::1 prefixlen 64"
 done
-echo "debug cloned_if_list: ${CLONED_IF_LIST}"
 sysrc cloned_interfaces="${CLONED_IF_LIST}"
 sysrc ifconfig_tap99="inet 172.16.254.1/24"
 sysrc ifconfig_tap99_ipv6="inet6 fc00:dead:beef::1 prefixlen 64"
 sysrc ifconfig_em1="inet 2.2.2.254/24"
 
 service netif restart && \
-	echo "Meet a problem for restarting/generating new interface"
+  echo "Meet a problem for restarting/generating new interface"
 
 ### Activation du Routage
 sysrc ipv6_activate_all_interfaces="YES"
@@ -147,14 +140,14 @@ service routing restart && echo "Meet a problem for starting routing"
 ### Serveur SSH configuration
 if ! grep -q "UseDNS no" /etc/ssh/sshd_config; then
 	cat <<EOF >>/etc/ssh/sshd_config
-#Permit to create SSH routed tunnels
+#Force usage of RSA host key only
+HostKey /etc/ssh/ssh_host_rsa_key
+#Force auth using key
+PasswordAuthentication no
+UsePAM no
 PermitTunnel yes
-PermitRootLogin yes
 UseDNS no
 LogLevel DEBUG
-#Prevent user to play with the root account :-)
-Match User root
-        ChrootDirectory /var/empty
 EOF
 fi
 ### Serveur WWW
