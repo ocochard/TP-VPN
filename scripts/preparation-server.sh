@@ -86,15 +86,15 @@ for i in `jot $BIN_MAX`; do
 	if [ ! -f ${EASYRSA_PKI}/issued/succursale_${i}.crt ];then
 		EASYRSA_REQ_CN="succursale_${i}"; export EASYRSA_REQ_CN
 		easyrsa build-client-full succursale_$i nopass
-		mkdir -p /tmp/succursale_$i/certifs-openvpn
-		#Testing correct file size
-		FILE_LIST="ca.crt issued/succursale_${i}.crt private/succursale_${i}.key"
-		for file in ${FILE_LIST}; do
-			[ -s ${EASYRSA_PKI}/${file} ] || \
-				die "Error with file ${EASYRSA_PKI}/${file}: Missing or empty"
-			cp ${EASYRSA_PKI}/${file} /tmp/succursale_${i}/certifs-openvpn/
-		done
 	fi
+	mkdir -p /tmp/succursale_$i/certifs-openvpn
+	#Testing correct file size
+	FILE_LIST="ca.crt issued/succursale_${i}.crt private/succursale_${i}.key"
+	for file in ${FILE_LIST}; do
+		[ -s ${EASYRSA_PKI}/${file} ] || \
+			die "Error with file ${EASYRSA_PKI}/${file}: Missing or empty"
+		cp ${EASYRSA_PKI}/${file} /tmp/succursale_${i}/certifs-openvpn/
+	done
 	tar -cf /tmp/succursale_${i}_cles.tgz -C /tmp/succursale_${i} .
 	rm -rf /tmp/succursale_${i}
 	echo "route 172.16.${i}.0 255.255.255.0" >> /usr/local/etc/openvpn/openvpn.conf
