@@ -521,7 +521,7 @@ Puis exécutez le script \shellcmd{easyrsa build-ca nopass} et examinez le conte
 \end{enumerate}
 }
 
-Exécutez le script \shellcmd{easyrsa build-server-full concentrateur NOM-DE-VOTRE-ROUTEUR nopass} puis examinez le contenu du répertoire pki/.
+Exécutez le script \shellcmd{easyrsa build-server-full NOM-DE-VOTRE-ROUTEUR nopass} puis examinez le contenu du répertoire pki/.
 
 \cadre{\question{Question}
 \begin{enumerate}
@@ -530,7 +530,7 @@ Exécutez le script \shellcmd{easyrsa build-server-full concentrateur NOM-DE-VOT
 \setcounter{saveenum}{\value{enumi}}
 \end{enumerate}
 }
-Vous allez maintenant générer un certificat client par la commande \shellcmd{easyrsa build-client-full BINOME-?i nopass} avec ? correspondant au numéro du binôme voisin.
+Vous allez maintenant générer un certificat client par la commande \shellcmd{easyrsa build-client-full BINOME-? nopass} avec ? correspondant au numéro du binôme voisin.
 Puis recopiez les fichiers ca.crt, dh.pem, issued/NOM-DE-VOTRE-ROUTEUR.crt et  private/NOM-DE-VOTRE-ROUTEUR.key dans le répertoire /usr/local/etc/openvpn/.
 Transmettez les certificats utilisateurs (BINOME-?.crt, BINOME-?.key et ca.crt) au binôme voisin par scp.
 
@@ -564,7 +564,7 @@ Les paramètres obligatoires minimums au fonctionnement du daemon OpenVPN sont l
 \item (optionnel) Le niveau de détail des logs : 4;
 \end{itemize}
 
-Lancer le service en ajoutant la ligne \shellcmd{openvpn\_enable="yes"} au fichier /etc/rc.conf suivis d'un \shellcmd{service}. Utilisez les messages du fichier /var/log/messages pour résoudre vos problèmes.
+Lancer le service en ajoutant la ligne \shellcmd{openvpn\_enable="yes"} au fichier /etc/rc.conf suivis d'un \shellcmd{service openvpn start}. Utilisez les messages du fichier /var/log/messages pour résoudre vos problèmes.
 
 \cadre{\question{Questions}
 \begin{enumerate}
