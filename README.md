@@ -8,14 +8,15 @@ TP sur les technos VPN pour classes de licences professionnelles: ASUR (Administ
 
 (Une copie de cette image, compressée avec xz (environ 400Mo), est disponible [ici](http://gugus69.free.fr/IUT/FreeBSD12-iutstmalo.img.xz)).
 
+Création d'une VM avec un disque dur de taille 2Gib (1.9Go) (pour correspondre à la taille marketing des clés USB de 2Gib).
+
 Instructions de création de l'image à partir d'un poste FreeBSD avec bhyve:
-* Création d'une VM avec un disque dur de taille 2Gib (1.9Go) (pour correspondre à la taille marketing des clés USB de 2Gib)
 ```
 pkg install vm-bhyve
-mkdir /home/olivier/VMs
-sysrc vm_dir="/home/olivier/VMs"
+mkdir $HOME/VMs
+sysrc vm_dir="$HOME/VMs"
 vm init
-echo 'disk0_size="2000000000"' >> /home/olivier/VMs/.templates/default.conf
+echo 'disk0_size="2000000000"' >> $HOME/VMs/.templates/default.conf
 vm switch create public
 vm switch add public lagg0
 vm iso ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/12.0/FreeBSD-12.0-RELEASE-amd64-disc1.iso
@@ -24,7 +25,7 @@ vm install iutstmalo FreeBSD-12.0-RELEASE-amd64-disc1.iso
 vm console iutstmalo
 ```
 
-Instruction de création de l'image à partir d'un MacOS avec xhyve:
+Instructions de création de l'image à partir d'un MacOS avec xhyve:
 ```
 brew install xhyve
 mkdir -p $HOME/VMs/iutstmalo
