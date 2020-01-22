@@ -190,5 +190,18 @@ sysrc openvpn_enable="YES"
 service openvpn restart && \
   echo "Warning: Can t reload openvpn"
 
+cat >/etc/ipfw.rules <<EOF
+#!/bin/sh
+/sbin/ipfw -f flush
+/sbin/ipfw add allow ip from 2.2.2.0/24 to any recv em1
+/sbin/ipfw add deny ip any to any recv em1
+/sbin/ipfw add allow ip from any to any
+EOF
+
+echo "Starting firewall on em1"
+sysrc firewall_enable=YES
+sysrc firewall_script="/etc/ipfw.rules"
+service ipfw start || echo "Error trying to start firewall"
+
 echo "WARNING: NEED TO CHANGE ROOT password now!"
 
