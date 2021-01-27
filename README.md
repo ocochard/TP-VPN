@@ -45,24 +45,24 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Continue with default keymap: La configuration du clavier français se fera plus tard
 * Hostname: routeur.univ-rennes1.fr
 * Choix des packages: Désélectionner kernel-dbg et lib32
-* Partitionning: Manual, Create, MBR (DOS partitions), Create (freebsd), OK, selectionner la nouvelle partition s1, Create, Mountpoint: /, Finish, Commit
-
-MBR:
-s1, 33 MB, efi
-s2, le reste, BSD
-s2a, freebsd-ufs, /
-
+* Partitionning: Manual
+  * Create MBR (DOS partitions)
+  * Create (efi, 33MB)
+  * Create (freebsd), selectionner cette nouvelle partition s1
+  * Create (freebsd-ufs), Mountpoint: /, Finish, Commit
 * Mot de passe root: stmalo
-* Configurer le réseau pour l'installation des packages et scripts
+* Configurer le réseau pour l'installation des packages et scripts: DHCP
 * Configurer la timezone: Europe, France, Yes, Skip
-* Services: Désactiver SSHD et dumpdev
+* Services: Désactiver sshd et dumpdev
 * Sécurité: laisser par défaut
 * Ajout d'utilisateur: non
 * Exit (Apply configuration)
 * Lancer un shell: YES
+
 ```
 dd if=/dev/vtbd0s1 of=/dev/vtbd1s1
 sed -i '' -e 's,vtbd1s2a,ufs/rootfs,g' /etc/fstab
+exit
 ```
 
 * Reboot ou LiveCD: LiveCD
