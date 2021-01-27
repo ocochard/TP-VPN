@@ -2,7 +2,7 @@
 set -eu
 
 # Declaration d'un clavier AZERTY francais
-sysrc keymap="fr.iso.acc"
+sysrc keymap="fr.acc.kbd"
 
 EASYRSA_DIR="/usr/local/share/easy-rsa"
 
@@ -29,6 +29,7 @@ mohawk
 w3m
 vim-console
 nano
+en-freebsd-doc
 '
 
 ASSUME_ALWAYS_YES=yes
@@ -41,19 +42,36 @@ done
 # Configuration du dossier PKI pour easyrsa
 echo 'set_var EASYRSA_PKI             "$EASYRSA/pki"' >> /usr/local/share/easy-rsa/vars
 
+mkdir /home/etudiant/handbook
+cd /home/etudiant/handbook
+fetch https://download.freebsd.org/ftp/doc/handbook/book.html.tar.bz2
+tar xzfv book.html.tar.bz2
+cat <<EOF > /etc/motd.template
+
+Welcome to FreeBSD!
+
+FreeBSD Handbook: https://www.FreeBSD.org/handbook
+
+Local copy of this handbook is available, readable with this command:
+w3m /usr/local/share/doc/freebsd/en/books/handbook/index.html
+
+EOF
+
 cd /tmp
 [ -f preparation-server.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-server.sh
 [ -f tunnels.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/tunnels.sh
 
 # Modification du fstab pour prendre en compte le label UFS
-tunefs -p /dev/vtbd0s1a > /tmp/tunefs.txt 2>&1
-if grep -q rootfs /tmp/tunefs.txt; then
+if grep -q rootfs /etc/fstab; then
 	sed -i "" -e 's/vtbd0s1a/ufs\/rootfs/' /etc/fstab
+fi
+if grep -q noatime /etc/fstab; then
 	sed -i "" -e 's/rw/rw,noatime/' /etc/fstab
 fi
-rm /tmp/tunefs.txt
+sysrc -x dumpdev
+sed -i "" '/dumpdev/d' /etc/rc.conf
 
 # Suppression de la configuration reseau
-sysrc -x ifconfig_vtnet0_ipv6
+sysrc -x ifconfig_vtnet0_ipv6 || true
 sysrc -x ifconfig_vtnet0
 

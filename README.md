@@ -27,17 +27,17 @@ vm console iutstmalo
 
 Instructions de création de l'image à partir d'un MacOS avec xhyve:
 ```
-brew install xhyve
+brew install hyperkit
+curl -LO https://github.com/moby/hyperkit/raw/master/test/userboot.so
 mkdir -p $HOME/VMs/iutstmalo
+cp scripts/hyperkit-run.sh $HOME/VMs/iutstmalo
 cd $HOME/VMs/iutstmalo
-cp /usr/local/opt/xhyve/share/xhyve/xhyverun-freebsd.sh .
+scp my-freebsd-machine-with-bhyve-firmware-installed:/usr/local/share/uefi-firmware/BHYVE_UEFI.fd .
 curl ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/12.0/FreeBSD-12.0-RELEASE-amd64-disc1.iso --output FreeBSD-12.0-RELEASE-amd64-disc1.iso
 mkfile 2000000000 disk0.img
-sed -i "" -e '/BOOTVOLUME=/s/<path of FreeBSD iso>/FreeBSD-12.0-RELEASE-amd64-disc1.iso/' xhyverun-freebsd.sh
-sed -i "" -e '/IMG=/s/<path of disk image for FreeBSD>/disk0.img/' xhyverun-freebsd.sh
-sed -i "" -e 's/build\///' xhyverun-freebsd.sh
-sed -i "" -e 's/test\//\/usr\/local\/opt\/xhyve\/share\/xhyve\/test\//' xhyverun-freebsd.sh
+sudo ./hyperkit-run.sh
 ```
+
 
 Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Console type: par défaut (VT100)
@@ -46,6 +46,12 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Hostname: routeur.univ-rennes1.fr
 * Choix des packages: Désélectionner kernel-dbg et lib32
 * Partitionning: Manual, Create, MBR (DOS partitions), Create (freebsd), OK, selectionner la nouvelle partition s1, Create, Mountpoint: /, Finish, Commit
+
+MBR:
+s1, 33 MB, efi
+s2, le reste, BSD
+s2a, freebsd-ufs, /
+
 * Mot de passe root: stmalo
 * Configurer le réseau pour l'installation des packages et scripts
 * Configurer la timezone: Europe, France, Yes, Skip
@@ -53,12 +59,17 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Sécurité: laisser par défaut
 * Ajout d'utilisateur: non
 * Exit (Apply configuration)
-* Lancer un shell: NO
+* Lancer un shell: YES
+```
+dd if=/dev/vtbd0s1 of=/dev/vtbd1s1
+sed -i '' -e 's,vtbd1s2a,ufs/rootfs,g' /etc/fstab
+```
+
 * Reboot ou LiveCD: LiveCD
 
 ```
 login: root
-tunefs -L rootfs /dev/vtbd0s1a
+tunefs -L rootfs /dev/vtbd1s2a
 reboot
 ```
 
@@ -70,7 +81,7 @@ Redémarrer le système à la fin, puis se connecter en root sur la machine, té
 
 ```
 cd /tmp
-fetch --no-verify-peer https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-master.sh
+fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-master.sh
 sh preparation-master.sh
 shutdown -p now
 ```

@@ -1,6 +1,9 @@
 %Compilation sous FreeBSD:
 % pkg install tex-formats tex-xetex
 % xelatex TP_GIF_SSH_OpenVPN.tex
+%Compilation sous MacOS:
+% brew install --cask mactex
+% TexShop, selectionner le moteur XeLaTeX
 %Style de document (format papier, taille police, langue)
 \documentclass[a4paper,11pt]{article}
 %New command "shellcmd" for CLI command style
@@ -73,7 +76,7 @@
 \centerline{
 {\Large
 {\fontencoding{U}\fontfamily{futs}\selectfont\char 66\relax}
-Lecture interdite sur smartphone (non lisible)
+Document non lisible sur smartphone (taille A4 minimum)
 }
 }
 \tableofcontents
