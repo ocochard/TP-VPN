@@ -10,7 +10,7 @@ EASYRSA_DIR="/usr/local/share/easy-rsa"
 sysrc -f /boot/loader.conf autoboot_delay="2"
 #kld_list="/boot/modules/i915kms.ko"
 sysrc -f /boot/loader.conf i915kms_load="YES"
-sysrc -f /boot/loader.conf kern.vt.fb.default_mode="1024x768"
+echo 'kern.vt.fb.default_mode="1024x768"' >> /boot/loader.conf
 # Configuration d'un CLI en couleur par defaut et desactivation du beep
 grep -q CLICOLOR /etc/csh.cshrc ||  echo "setenv CLICOLOR" >> /etc/csh.cshrc
 grep -q nobeep /etc/csh.cshrc || echo "set nobeep" >> /etc/csh.cshrc
@@ -29,7 +29,7 @@ tmux
 openvpn
 mohawk
 w3m
-vim-console
+vim-tiny
 nano
 en-freebsd-doc
 drm-kmod

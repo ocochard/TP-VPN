@@ -70,7 +70,7 @@ exit
 
 ```
 login: root
-tunefs -m 5 -o space -L rootfs /dev/vtbd1s2a
+tunefs -m 1 -o space -L rootfs /dev/vtbd1s2a
 reboot
 ```
 
