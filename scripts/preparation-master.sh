@@ -8,7 +8,9 @@ EASYRSA_DIR="/usr/local/share/easy-rsa"
 
 # Acceleration du temps de demarage
 sysrc -f /boot/loader.conf autoboot_delay="2"
-
+#kld_list="/boot/modules/i915kms.ko"
+sysrc -f /boot/loader.conf i915kms_load="YES"
+sysrc -f /boot/loader.conf kern.vt.fb.default_mode="1024x768"
 # Configuration d'un CLI en couleur par defaut et desactivation du beep
 grep -q CLICOLOR /etc/csh.cshrc ||  echo "setenv CLICOLOR" >> /etc/csh.cshrc
 grep -q nobeep /etc/csh.cshrc || echo "set nobeep" >> /etc/csh.cshrc
@@ -30,6 +32,7 @@ w3m
 vim-console
 nano
 en-freebsd-doc
+drm-kmod
 '
 
 ASSUME_ALWAYS_YES=yes

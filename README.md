@@ -27,13 +27,14 @@ vm console iutstmalo
 
 Instructions de création de l'image à partir d'un MacOS avec xhyve:
 ```
-brew install hyperkit
+brew install hyperkit xz
 curl -LO https://github.com/moby/hyperkit/raw/master/test/userboot.so
 mkdir -p $HOME/VMs/iutstmalo
 cp scripts/hyperkit-run.sh $HOME/VMs/iutstmalo
 cd $HOME/VMs/iutstmalo
 scp my-freebsd-machine-with-bhyve-firmware-installed:/usr/local/share/uefi-firmware/BHYVE_UEFI.fd .
-curl ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/12.0/FreeBSD-12.0-RELEASE-amd64-disc1.iso --output FreeBSD-12.0-RELEASE-amd64-disc1.iso
+curl ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/13.0/FreeBSD-13.0-RELEASE-amd64-memstick.img.xz --output FreeBSD-13.0-RELEASE-amd64-memstick.img.xz
+unxz FreeBSD-13.0-RELEASE-amd64-memstick.img.xz
 mkfile 2000000000 disk0.img
 sudo ./hyperkit-run.sh
 ```
@@ -69,7 +70,7 @@ exit
 
 ```
 login: root
-tunefs -L rootfs /dev/vtbd1s2a
+tunefs -m 5 -o space -L rootfs /dev/vtbd1s2a
 reboot
 ```
 
@@ -88,8 +89,13 @@ shutdown -p now
 
 ### Transfert de l'image disque sur une clé USB (2Go)
 Une fois terminé, l'image disque peux être transférée sur clé USB avec un simple dd (ou Win32 Disk Imager sous windows).
+Exemple depuis un FreeBSD:
 ```
 dd if=$HOME/VMs/iutstmalo/disk0.img of=/dev/da0 bs=512k
+```
+Exemple depuis un MacOS:
+```
+sudo dd if=disk0.img of=/dev/rdisk4 bs=1m
 ```
 
 ### Génération du PDF de support de TP
