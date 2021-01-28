@@ -8,7 +8,7 @@ EASYRSA_DIR="/usr/local/share/easy-rsa"
 
 # Acceleration du temps de demarage
 sysrc -f /boot/loader.conf autoboot_delay="2"
-echo 'hw.vga.textmode=1' >> >> /boot/loader.conf
+echo 'hw.vga.textmode=0' >> /boot/loader.conf
 #sysrc -f /boot/loader.conf i915kms_load="YES"
 #echo 'kern.vt.fb.default_mode="1024x768"' >> /boot/loader.conf
 # Configuration d'un CLI en couleur par defaut et desactivation du beep
