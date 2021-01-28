@@ -8,9 +8,9 @@ EASYRSA_DIR="/usr/local/share/easy-rsa"
 
 # Acceleration du temps de demarage
 sysrc -f /boot/loader.conf autoboot_delay="2"
-#kld_list="/boot/modules/i915kms.ko"
-sysrc -f /boot/loader.conf i915kms_load="YES"
-echo 'kern.vt.fb.default_mode="1024x768"' >> /boot/loader.conf
+echo 'hw.vga.textmode=1' >> >> /boot/loader.conf
+#sysrc -f /boot/loader.conf i915kms_load="YES"
+#echo 'kern.vt.fb.default_mode="1024x768"' >> /boot/loader.conf
 # Configuration d'un CLI en couleur par defaut et desactivation du beep
 grep -q CLICOLOR /etc/csh.cshrc ||  echo "setenv CLICOLOR" >> /etc/csh.cshrc
 grep -q nobeep /etc/csh.cshrc || echo "set nobeep" >> /etc/csh.cshrc
@@ -32,8 +32,8 @@ w3m
 vim-tiny
 nano
 en-freebsd-doc
-drm-kmod
 '
+#drm-kmod
 
 ASSUME_ALWAYS_YES=yes
 export ASSUME_ALWAYS_YES
@@ -42,13 +42,15 @@ for PACKAGE in ${PKG_LIST}; do
   pkg info ${PACKAGE} || pkg install -y ${PACKAGE}
 done
 
+# Trop de documentation pour tenir dans 2G
+#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/articles/
+#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/arch-handbook
+#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/design-44bsd
+#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/developers-handbook
+
 # Configuration du dossier PKI pour easyrsa
 echo 'set_var EASYRSA_PKI             "$EASYRSA/pki"' >> /usr/local/share/easy-rsa/vars
 
-mkdir /home/etudiant/handbook
-cd /home/etudiant/handbook
-fetch https://download.freebsd.org/ftp/doc/handbook/book.html.tar.bz2
-tar xzfv book.html.tar.bz2
 cat <<EOF > /etc/motd.template
 
 Welcome to FreeBSD!
@@ -74,8 +76,9 @@ fi
 sysrc -x dumpdev
 sed -i "" '/dumpdev/d' /etc/rc.conf
 
+#sysrc kld_list="/boot/modules/i915kms.ko"
+
 # Suppression de la configuration reseau
 rm /etc/resolv.conf
 sysrc -x ifconfig_vtnet0_ipv6 || true
 sysrc -x ifconfig_vtnet0
-
