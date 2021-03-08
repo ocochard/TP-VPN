@@ -1,6 +1,6 @@
 # TP VPN
 
-TP sur les technos VPN pour classes de licences professionnelles: ASUR (Administration et Sécurité des Réseaux) et RIMS (Réseaux Informatiques Mobilité Sécurité).
+TP sur les technologies VPN pour classes de licences professionnelles styles ASUR (Administration et Sécurité des Réseaux) et RIMS (Réseaux Informatiques Mobilité Sécurité).
 
 ## Préparation du TP
 
@@ -10,9 +10,9 @@ Note: Une copie de cette image, compressée avec xz (environ 400Mo), est disponi
 
 Création d'une VM avec un disque dur de taille 2Gib (1.9Go) (pour correspondre à la taille marketing des clés USB de 2Gib).
 
-Instructions de création de l'image à partir d'un poste FreeBSD avec bhyve:
+Instructions de création de l'image à partir d'un poste FreeBSD avec l'hyperviseur bhyve:
 ```
-pkg install vm-bhyve
+pkg install vm-bhyve bhyve-firmware
 mkdir $HOME/VMs
 sysrc vm_dir="$HOME/VMs"
 vm init
@@ -25,7 +25,7 @@ vm install iutstmalo FreeBSD-12.0-RELEASE-amd64-disc1.iso
 vm console iutstmalo
 ```
 
-Instructions de création de l'image à partir d'un MacOS avec xhyve:
+Instructions de création de l'image à partir d'un MacOS avec l'hyperviseur xhyve:
 ```
 brew install hyperkit xz
 curl -LO https://github.com/moby/hyperkit/raw/master/test/userboot.so
@@ -95,6 +95,8 @@ dd if=$HOME/VMs/iutstmalo/disk0.img of=/dev/da0 bs=512k
 ```
 Exemple depuis un MacOS:
 ```
+diskutil list | grep external
+diskutil unmountDisk disk4
 sudo dd if=disk0.img of=/dev/rdisk4 bs=1m
 ```
 
