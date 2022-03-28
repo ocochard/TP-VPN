@@ -16,12 +16,24 @@ pkg install vm-bhyve bhyve-firmware
 mkdir $HOME/VMs
 sysrc vm_dir="$HOME/VMs"
 vm init
-echo 'disk0_size="2000000000"' >> $HOME/VMs/.templates/default.conf
+cat > $HOME/VMs/.templates/iut.conf <<EOF
+loader="uefi"
+cpu=4
+cpu_sockets=1
+cpu_cores=4
+cpu_threads=1
+memory=8G
+network0_type="e1000"
+network0_switch="public"
+disk0_type="ahci-hd"
+disk0_name="disk0.img"
+disk0_size="2000000000"
+EOF
 vm switch create public
 vm switch add public lagg0
-vm iso ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/12.0/FreeBSD-12.0-RELEASE-amd64-disc1.iso
-vm create iutstmalo
-vm install iutstmalo FreeBSD-12.0-RELEASE-amd64-disc1.iso
+vm iso ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/13.0/FreeBSD-13.0-RELEASE-amd64-disc1.iso
+vm create -t iut iutstmalo
+vm install iutstmalo FreeBSD-13.0-RELEASE-amd64-disc1.iso
 vm console iutstmalo
 ```
 
@@ -66,11 +78,21 @@ sed -i '' -e 's,vtbd1s2a,ufs/rootfs,g' /etc/fstab
 exit
 ```
 
-* Reboot ou LiveCD: LiveCD
+* Do not log into shell
+* LiveCD
 
 ```
 login: root
-tunefs -m 1 -o space -L rootfs /dev/vtbd1s2a
+gpart modify -i 1 -l EFI ada0
+gpart modify -i 2 -l ROOT ada0
+gpart modify -i 3 -l SWAP ada0
+mount /dev/gpt/ROOT /mnt
+echo << EOF > /mnt/etc/fstab
+# Device        Mourtpoint      FStype  Options Dump    Pass#
+/dev/gpt/ROOT   /               ufs     rw,noatime      1       1
+/dev/gpt/EFI    /boot/efi               msdosfs rw      2       2
+/dev/gpt/SWAP   none            swap    sw      0       0
+EOF
 reboot
 ```
 
