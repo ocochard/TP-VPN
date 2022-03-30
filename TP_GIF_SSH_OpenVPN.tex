@@ -217,7 +217,7 @@ Commencer par activer le daemon SSH :
 \item Ajouter la ligne \shellcmd{sshd\_enable="YES"} dans le fichier /etc/rc.conf ou en utilisant la commande \shellcmd{service sshd enable};
 \item Lancer le démarrage du service par la commande \shellcmd{service sshd start}.
 \end{enumerate}
-Lors du lancement de celui-ci, il va générer différentes clés SSH pour lui-même et afficher l'emprunte de ces clés: Notez-les car elles vous seront demandées ultérieurement.
+Lors du lancement de celui-ci, il va générer différentes clés SSH pour lui-même et afficher l'empreinte de ces clés: Notez-les car elles vous seront demandées ultérieurement.
 
 Les scripts de démarrage des services systèmes se trouvent dans /etc/rc.d et ceux des applications tierces (OpenVPN, mohawk) dans /usr/local/etc/rc.d. Il est possible d'afficher la liste complète des scripts RC disponibles par la commande \shellcmd{service~-l} et d'afficher la liste des services activés par la commande \shellcmd{service~-e}.
 
@@ -364,7 +364,7 @@ Cet exercice présente une première utilisation de SSH par la protection de flu
 L'administrateur réseau du siège a réalisé deux actions :
 \begin{enumerate}
 \item Il a créé un compte utilisateur (login : succursale\_BIN, mot de passe : BIN) sur le concentrateur VPN du siège;
-\item Il vous a transmis une archive (succursale\_BIN\_cles.tgz) contenant les clés SSH (privée et publique) et certificat OpenVPN de l'utilisateur ainsi que l'emprunte SSH de la clé du concentrateur VPN (dans le dossier /home/etudiant).
+\item Il vous a transmis une archive (succursale\_BIN\_cles.tgz) contenant les clés SSH (privée et publique) et certificat OpenVPN de l'utilisateur ainsi que l'empreinte SSH de la clé du concentrateur VPN (dans le dossier /home/etudiant).
 \end{enumerate}
 \emph{Rappel : Ne travaillez sous le compte root que quand c'est ABSOLUMENT utile.}
 \\
@@ -375,7 +375,7 @@ Désarchiver votre archive contenant les clés SSH.
 \setcounter{enumi}{\value{saveenum}}
 \item Quelle est la clé, a préciser dans la commande ssh, qui est utilisée pour chiffrer votre session à destination du siège ?
 \item Comme il faut 2 clés pour chiffrer, quelle est la deuxième clé utilisée automatiquement par SSH et comment la récupère-t-il?
-\item Quelle est sont les clés déja installées sur le serveur SSH du siège qui vont être utilisés pour déchiffrer vos messages ?
+\item Quelle sont les clés déja installées sur le serveur SSH du siège qui vont être utilisés pour déchiffrer vos messages ?
 \item Quelle est l'autorité de certification ?
 \item Qu'est-ce qu'une attaque de type «~man in the middle~» ? Comment s'en protéger ? et comment SSH protège de ce type d'attaque ?
 \setcounter{saveenum}{\value{enumi}}
