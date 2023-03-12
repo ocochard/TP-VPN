@@ -6,7 +6,7 @@ TP sur les technologies VPN pour classes de licences professionnelles styles ASU
 
 ### Creation de l'image disque FreeBSD
 
-Note: Une copie de cette image, compressée avec xz (environ 400Mo), est disponible [ici](http://gugus69.free.fr/IUT/FreeBSD12-iutstmalo.img.xz).
+Note: Une copie de cette image, compressée avec xz (environ 400Mo), est disponible [ici](http://gugus69.free.fr/IUT/FreeBSD13-UEFI-iutstmalo.img.xz).
 
 Création d'une VM avec un disque dur de taille 2Gib (1.9Go) (pour correspondre à la taille marketing des clés USB de 2Gib).
 

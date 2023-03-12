@@ -15,7 +15,7 @@
 %Define a variable used for the question numbers
 \newcounter{saveenum}
 %Suppression des marges
-%On ajoute la largeur des marges au text
+%On ajoute la largeur des marges au texte
 \addtolength{\textwidth}{\marginparwidth}
 \addtolength{\textwidth}{\marginparsep}
 \addtolength{\textwidth}{\oddsidemargin}
@@ -23,7 +23,7 @@
 \marginparwidth=0cm
 \oddsidemargin=0cm
 \marginparsep=0cm
-%On enlève même 1cm à la marge de droite et on ajoute 2cm à la largeur du texte (pour aussi gagner 1cm sur la marge de gauche)
+%On enlève 1cm à la marge de droite et on ajoute 2cm à la largeur du texte (pour aussi gagner 1cm sur la marge de gauche)
 \addtolength{\hoffset}{-1cm}
 \addtolength{\textwidth}{2cm}
 %Idem pour les hauteurs de marges: Suppression complète de l'entête
@@ -33,7 +33,7 @@
 \topmargin=0cm
 \headheight=0cm
 \headsep=0cm
-%On enlève même 1cm à la marge du haut et on ajoute 2cm à la longueur du texte (pour aussi gagner 1cm sur la marge du bas)
+%On enlève 1cm à la marge du haut et on ajoute 2cm à la longueur du texte (pour aussi gagner 1cm sur la marge du bas)
 \addtolength{\voffset}{-1cm}
 \addtolength{\textheight}{2cm}
 %Verify the layout (need to use \layout in the document)
@@ -94,11 +94,10 @@ Ce TP se découpe en plusieurs exercices du plus simple au plus complexe, tous p
 \item Configuration d'un serveur OpenVPN et la création/répudiation de certificat (exercice par paire de binôme).
 \end{enumerate}
 \subsection{Grille de notation}
-La différence entre deux techniciens se fait uniquement à la qualité du travail écrit rendu. La notation de votre rapport prendra donc en compte:
+La notation de votre rapport se fera sur les critères suivants:
 \begin{enumerate}
 \item La documentation de l'ensemble de vos actions (40\%). Ce qui inclut la description des commandes passées pour la préparation de vos environnements, le nettoyage éventuellement nécessaire entre les différents exercices, les exercices eux-mêmes et vos résolutions de problèmes rencontrés;
 \item La réponse argumentée aux questions numérotées (60\%);
-\item Avec quelques points supplémentaires pour toutes réponses aux questions IPv6.
 \end{enumerate}
 Vous noterez qu'il est donc possible de réussir l'intégralité des exercices proposés, mais au final c'est uniquemement le contenu de votre rapport qui sera noté.
 
@@ -117,9 +116,9 @@ L'environnement du TP simule le réseau du siège d'une entreprise reliée par V
 \end{center}
 %\clearpage
 \subsection{FreeBSD}
-Ce TP utilise un système d'exploitation libre de la famille des Unix\footnote{GNU/Linux n'est pas un Unix.}. L'avantage d'utiliser FreeBSD dans notre cas est sa simplicité de configuration (très peu de fichiers de configuration à modifier) ainsi que sa documentation très complète (pages man et guide utilisateur). De plus, la robustesse de sa pile IP et sa licence BSD en fait un système très couramment utilisé sur les équipements réseau et appliances (routeurs et commutateurs Juniper, Firewall Netasq, NAS NetApp et Isilon, Netflix OpenConnect, console Sony PS4, etc.).
+Ce TP utilise un système d'exploitation libre de la famille des Unix\footnote{GNU/Linux n'est pas un Unix.}. L'avantage d'utiliser FreeBSD dans notre cas est sa simplicité de configuration (très peu de fichiers de configuration à modifier) ainsi que sa documentation très complète (pages man et guide utilisateur). De plus, la robustesse de sa pile IP et sa licence BSD en fait un système très couramment utilisé sur les équipements réseau tel que les routeurs et commutateurs (Juniper), firewalls (StormShield, pfSense, Netasq), NAS (NetApp, Isilon), serveurs CDN (Netflix OpenConnect) mais aussi consoles (Sony PlayStation, Nintendo Switch).
 
-Particularité de FreeBSD pour les habitués à GNU/Linux : Le nom des périphériques (interfaces réseau, disques, etc…) n'est pas identifié par des noms génériques (eth0 pour la première carte réseau) mais par des noms liés aux drivers utilisés (bge0 pour la première carte Ethernet utilisant un pilote Broadcom, fxp0 pour une carte réseau Intel EtherExpress PRO/100, em0 pour des Intel Pro/1000, etc…).
+Particularité de FreeBSD pour les habitués à GNU/Linux : Le nom des périphériques (interfaces réseau, disques, etc.) est identifié par des noms liés aux drivers utilisés (bge0 pour la première carte Ethernet utilisant un pilote Broadcom, fxp0 pour une carte réseau Intel EtherExpress PRO/100, em0 pour des Intel Pro/1000, etc.).
 
 Pour afficher la liste des interfaces réseau détectées, utilisez la commande \shellcmd{ifconfig} sans argument.
 
