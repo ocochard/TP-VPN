@@ -23,9 +23,9 @@ cpu_sockets=1
 cpu_cores=4
 cpu_threads=1
 memory=8G
-network0_type="e1000"
+network0_type="virtio-net"
 network0_switch="public"
-disk0_type="ahci-hd"
+disk0_type="virtio-blk"
 disk0_name="disk0.img"
 disk0_size="2000000000"
 EOF
@@ -51,45 +51,36 @@ mkfile 2000000000 disk0.img
 sudo ./hyperkit-run.sh
 ```
 
-
 Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Console type: par défaut (VT100)
 * Install
 * Continue with default keymap: La configuration du clavier français se fera plus tard
 * Hostname: routeur.univ-rennes1.fr
 * Choix des packages: Désélectionner kernel-dbg et lib32
-* Partitionning: Guided UFS (useless swap)
-  * GPT
-  * All disk
-  * Finish, Commit
 * Or Partitionning: Manual
-  * Create MBR (DOS partitions)
-  * Create (efi, 33MB)
-  * Create (freebsd), selectionner cette nouvelle partition s1
-  * Create (freebsd-ufs), Mountpoint: /, Finish, Commit
+  * Create GPT 
+  * Create first partition:
+    * Type: efi
+    * Size: 33MB
+    * Mountpoint:
+    * Label: EFI
+  * Create second partition:
+    * Type: freebsd-ufs (default)
+    * Size: 1874MB (default)
+    * Mountpoint: /
+    * Label: ROOT
+  * Finish, commit
 * Mot de passe root: stmalo
 * Configurer le réseau pour l'installation des packages et scripts: DHCP
 * Configurer la timezone: Europe, France, Yes, Skip
-* Services: Désactiver sshd et dumpdev
+* Services: Désactiver sshd et dumpdev, activer powerd
 * Sécurité: laisser par défaut
 * Ajout d'utilisateur: non
 * Exit (Apply configuration)
 * Do not log into shell
-* LiveCD
-
-```
-gpart modify -i 1 -l efi /dev/ada0
-gpart modify -i 2 -l root /dev/ada0
-gpart modify -i 3 -l swap /dev/ada0
-mount /dev/gpt/root /mnt
-sed -i '' -e 's,ada0p1,gpt/efi,g' /mnt/etc/fstab
-sed -i '' -e 's,ada0p2,gpt/root,g' /mnt/etc/fstab
-sed -i '' -e 's,ada0p3,gpt/swap,g' /mnt/etc/fstab
-reboot
-```
 
 Redémarrer le système à la fin, puis se connecter en root sur la machine, télécharger et lancer le script de préparation du master:
-* Modification du /etc/fstab pour utiliser le label UFS (/dev/ufs/rootfs) au lieu des noms des disques physique pour permettre de booter depuis une clé USB ensuite
+* Modification du /etc/fstab pour utiliser les labels GPT(/dev/gpt/ROOT et /dev/gpt/EFI) au lieu des noms des disques physique pour permettre de booter depuis une clé USB ensuite
 * Personnalisation du système (clavier français)
 * Création du compte etudiant/iut
 * Installation des scripts serveur et tunnel

@@ -19,57 +19,45 @@ echo "export CLICOLOR"
 
 # Creation du compte etudiant et ajout dans le groupe wheel
 if ! grep -q etudiant /etc/passwd; then
-	echo "etudiant::::::::/bin/csh:iut" > /tmp/ajout.user
+	echo "etudiant::::::::/bin/sh:iut" > /tmp/ajout.user
 	adduser -f /tmp/ajout.user
 	pw usermod etudiant -G wheel
 fi
 
 echo "Installation des packages"
-PKG_LIST='
-ca_root_nss
-tmux
-openvpn
-mohawk
-w3m
-vim-tiny
-nano
-en-freebsd-doc
-'
-
 ASSUME_ALWAYS_YES=yes
 export ASSUME_ALWAYS_YES
 pkg bootstrap
-for PACKAGE in ${PKG_LIST}; do
-  pkg info ${PACKAGE} || pkg install -y ${PACKAGE}
-done
-
-# Trop de documentation pour tenir dans 2G
-#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/articles/
-#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/arch-handbook
-#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/design-44bsd
-#rm -rf /usr/local/share/doc/freebsd/en_US.ISO8859-1/books/developers-handbook
+pkg install -y ca_root_nss tmux openvpn mohawk w3m vim-tiny nano en-freebsd-doc
 
 # Configuration du dossier PKI pour easyrsa
 echo 'set_var EASYRSA_PKI             "$EASYRSA/pki"' >> /usr/local/share/easy-rsa/vars
 
 cat <<EOF > /etc/motd.template
 
-Welcome to FreeBSD!
+Bienvenu sur FreeBSD!
 
-FreeBSD Handbook: https://www.FreeBSD.org/handbook
+Le manuel FreeBSD: https://www.FreeBSD.org/handbook
 
-Local copy of this handbook is available, readable with this command:
+Une copie du manuel est disponible localement, l'afficher par la commande suivante:
 w3m /usr/local/share/doc/freebsd/en/books/handbook/index.html
 
 EOF
+
+service motd restart
 
 cd /tmp
 [ -f preparation-server.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-server.sh
 [ -f tunnels.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/tunnels.sh
 
 # Modification du fstab pour prendre en compte le label GPT
-if grep -q gpt /etc/fstab; then
-	sed -i "" -e 's/vtbd0s1a/gpt\/root/' /etc/fstab
+if grep -q vtbd0 /etc/fstab; then
+	sed -i "" -e 's/vtbd0p2/gpt\/ROOT/' /etc/fstab
+	sed -i "" -e 's/vtbd0p1/gpt\/EFI/' /etc/fstab
+fi
+if grep -q ada0 /etc/fstab; then
+	sed -i "" -e 's/ada0p2/gpt\/ROOT/' /etc/fstab
+	sed -i "" -e 's/ada0p1/gpt\/EFI/' /etc/fstab
 fi
 if grep -q noatime /etc/fstab; then
 	sed -i "" -e 's/rw/rw,noatime/' /etc/fstab
