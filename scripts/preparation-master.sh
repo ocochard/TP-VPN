@@ -59,7 +59,7 @@ if grep -q ada0 /etc/fstab; then
 	sed -i "" -e 's/ada0p2/gpt\/ROOT/' /etc/fstab
 	sed -i "" -e 's/ada0p1/gpt\/EFI/' /etc/fstab
 fi
-if grep -q noatime /etc/fstab; then
+if !grep -q noatime /etc/fstab; then
 	sed -i "" -e 's/rw/rw,noatime/' /etc/fstab
 fi
 sysrc -x dumpdev
@@ -71,3 +71,4 @@ sysrc -x ifconfig_em0_ipv6 || true
 sysrc -x ifconfig_em0
 sysrc -x ifconfig_vtnet0_ipv6 || true
 sysrc -x ifconfig_vtnet0
+rm /etc/resolv.conf.bak

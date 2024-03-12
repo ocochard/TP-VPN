@@ -58,7 +58,7 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Hostname: routeur.univ-rennes1.fr
 * Choix des packages: Désélectionner kernel-dbg et lib32
 * Or Partitionning: Manual
-  * Create GPT 
+  * Create GPT
   * Create first partition:
     * Type: efi
     * Size: 33MB
