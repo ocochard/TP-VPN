@@ -7,13 +7,15 @@ sysrc keymap="fr.acc.kbd"
 EASYRSA_DIR="/usr/local/share/easy-rsa"
 
 # Acceleration du temps de demarage
-sysrc -f /boot/loader.conf autoboot_delay="2"
-echo 'hw.vga.textmode=0' >> /boot/loader.conf
+sysrc -f /boot/loader.conf autoboot_delay="1"
+#echo 'hw.vga.textmode=0' >> /boot/loader.conf
 #sysrc -f /boot/loader.conf i915kms_load="YES"
 #echo 'kern.vt.fb.default_mode="1024x768"' >> /boot/loader.conf
 # Configuration d'un CLI en couleur par defaut et desactivation du beep
-grep -q CLICOLOR /etc/csh.cshrc ||  echo "setenv CLICOLOR" >> /etc/csh.cshrc
-grep -q nobeep /etc/csh.cshrc || echo "set nobeep" >> /etc/csh.cshrc
+(
+echo "CLICOLOR=yes"
+echo "export CLICOLOR"
+) >> /etc/profile
 
 # Creation du compte etudiant et ajout dans le groupe wheel
 if ! grep -q etudiant /etc/passwd; then
@@ -33,7 +35,6 @@ vim-tiny
 nano
 en-freebsd-doc
 '
-#drm-kmod
 
 ASSUME_ALWAYS_YES=yes
 export ASSUME_ALWAYS_YES
@@ -66,9 +67,9 @@ cd /tmp
 [ -f preparation-server.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/preparation-server.sh
 [ -f tunnels.sh ] || fetch https://raw.githubusercontent.com/ocochard/TP-VPN/master/scripts/tunnels.sh
 
-# Modification du fstab pour prendre en compte le label UFS
-if grep -q rootfs /etc/fstab; then
-	sed -i "" -e 's/vtbd0s1a/ufs\/rootfs/' /etc/fstab
+# Modification du fstab pour prendre en compte le label GPT
+if grep -q gpt /etc/fstab; then
+	sed -i "" -e 's/vtbd0s1a/gpt\/root/' /etc/fstab
 fi
 if grep -q noatime /etc/fstab; then
 	sed -i "" -e 's/rw/rw,noatime/' /etc/fstab
@@ -76,9 +77,9 @@ fi
 sysrc -x dumpdev
 sed -i "" '/dumpdev/d' /etc/rc.conf
 
-#sysrc kld_list="/boot/modules/i915kms.ko"
-
 # Suppression de la configuration reseau
 rm /etc/resolv.conf
+sysrc -x ifconfig_em0_ipv6 || true
+sysrc -x ifconfig_em0
 sysrc -x ifconfig_vtnet0_ipv6 || true
 sysrc -x ifconfig_vtnet0

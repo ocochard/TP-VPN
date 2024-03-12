@@ -31,9 +31,9 @@ disk0_size="2000000000"
 EOF
 vm switch create public
 vm switch add public lagg0
-vm iso ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/13.0/FreeBSD-13.0-RELEASE-amd64-disc1.iso
+vm iso https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/FreeBSD-14.0-RELEASE-amd64-disc1.iso
 vm create -t iut iutstmalo
-vm install iutstmalo FreeBSD-13.0-RELEASE-amd64-disc1.iso
+vm install iutstmalo FreeBSD-14.0-RELEASE-amd64-disc1.iso
 vm console iutstmalo
 ```
 
@@ -45,8 +45,8 @@ mkdir -p $HOME/VMs/iutstmalo
 cp scripts/hyperkit-run.sh $HOME/VMs/iutstmalo
 cd $HOME/VMs/iutstmalo
 scp my-freebsd-machine-with-bhyve-firmware-installed:/usr/local/share/uefi-firmware/BHYVE_UEFI.fd .
-curl ftp://ftp.freebsd.org/pub/FreeBSD/releases/ISO-IMAGES/13.0/FreeBSD-13.0-RELEASE-amd64-memstick.img.xz --output FreeBSD-13.0-RELEASE-amd64-memstick.img.xz
-unxz FreeBSD-13.0-RELEASE-amd64-memstick.img.xz
+curl https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/14.0/FreeBSD-14.0-RELEASE-amd64-memstick.img.xz --output FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
+unxz FreeBSD-14.0-RELEASE-amd64-memstick.img.xz
 mkfile 2000000000 disk0.img
 sudo ./hyperkit-run.sh
 ```
@@ -58,7 +58,11 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Continue with default keymap: La configuration du clavier français se fera plus tard
 * Hostname: routeur.univ-rennes1.fr
 * Choix des packages: Désélectionner kernel-dbg et lib32
-* Partitionning: Manual
+* Partitionning: Guided UFS (useless swap)
+  * GPT
+  * All disk
+  * Finish, Commit
+* Or Partitionning: Manual
   * Create MBR (DOS partitions)
   * Create (efi, 33MB)
   * Create (freebsd), selectionner cette nouvelle partition s1
@@ -70,29 +74,17 @@ Pour les paramètres d'installation d'un FreeBSD sur cette image:
 * Sécurité: laisser par défaut
 * Ajout d'utilisateur: non
 * Exit (Apply configuration)
-* Lancer un shell: YES
-
-```
-dd if=/dev/vtbd0s1 of=/dev/vtbd1s1
-sed -i '' -e 's,vtbd1s2a,ufs/rootfs,g' /etc/fstab
-exit
-```
-
 * Do not log into shell
 * LiveCD
 
 ```
-login: root
-gpart modify -i 1 -l EFI ada0
-gpart modify -i 2 -l ROOT ada0
-gpart modify -i 3 -l SWAP ada0
-mount /dev/gpt/ROOT /mnt
-echo << EOF > /mnt/etc/fstab
-# Device        Mourtpoint      FStype  Options Dump    Pass#
-/dev/gpt/ROOT   /               ufs     rw,noatime      1       1
-/dev/gpt/EFI    /boot/efi               msdosfs rw      2       2
-/dev/gpt/SWAP   none            swap    sw      0       0
-EOF
+gpart modify -i 1 -l efi /dev/ada0
+gpart modify -i 2 -l root /dev/ada0
+gpart modify -i 3 -l swap /dev/ada0
+mount /dev/gpt/root /mnt
+sed -i '' -e 's,ada0p1,gpt/efi,g' /mnt/etc/fstab
+sed -i '' -e 's,ada0p2,gpt/root,g' /mnt/etc/fstab
+sed -i '' -e 's,ada0p3,gpt/swap,g' /mnt/etc/fstab
 reboot
 ```
 
