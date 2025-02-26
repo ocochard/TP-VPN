@@ -359,6 +359,8 @@ Une fois le paramétrage IP terminé, à partir du navigateur du PC «~poste de 
 \emph{Appelez-les tuteurs pour qu'ils valident l'état de votre maquette.}
 %\clearpage
 \section{Exercice : Client SSH - Protection de flux TCP}
+\emph{Détruire les interfaces GIF si elles sont actives avant de réaliser les exercices OpenVPN.}
+
 Cet exercice présente une première utilisation de SSH par la protection de flux TCP.
 L'administrateur réseau du siège a réalisé deux actions :
 \begin{enumerate}
@@ -408,7 +410,7 @@ Pour activer cette redirection de port, vous allez à partir du PC «~routeur SS
 \end{enumerate}
 }
 \\\emph{\\Appelez-les tuteurs pour qu'ils valident l'état de votre maquette.}
-%\clearpage
+\clearpage
 \section{Exercice : Serveur SSH – Protection de flux TCP}
 Votre rôle est désormais de mettre en place un serveur OpenSSH pour permettre l'accès sécurisé à vos ressources. Pour cela vous réaliserez les actions suivantes:
 \begin{enumerate}
@@ -446,7 +448,7 @@ Modifier la configuration de votre serveur SSH (/etc/ssh/sshd\_config) pour :
 N'oubliez pas de redémarrer le service sshd suite à la modification de la configuration.
 Puis vérifier que le binôme voisin accède bien à vos ressources en utilisant la redirection de port : Si un mot de passe autre que celui de la clé privée SSH est demandé, cela veut dire que l'authentification par clé SSH ne fonctionne pas !
 \\\\\emph{Appelez-les tuteurs pour qu'ils valident l'état de votre maquette.}
-%\clearpage
+\clearpage
 \section{Exercice : Client OpenVPN – Protection de flux IP}
 Dans cet exercice votre routeur montera un tunnel OpenVPN vers le concentrateur VPN:
 \begin{center}
