@@ -68,7 +68,7 @@ sed -i "" '/dumpdev/d' /etc/rc.conf
 # Suppression de la configuration reseau
 rm /etc/resolv.conf
 sysrc -x ifconfig_em0_ipv6 || true
-sysrc -x ifconfig_em0
+sysrc -x ifconfig_em0 || true
 sysrc -x ifconfig_vtnet0_ipv6 || true
-sysrc -x ifconfig_vtnet0
+sysrc -x ifconfig_vtnet0 || true
 rm /etc/resolv.conf.bak
