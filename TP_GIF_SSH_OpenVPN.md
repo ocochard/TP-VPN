@@ -3,8 +3,8 @@ author: Olivier Cochard-Labbé
 lang: fr
 title: "Déploiement et recette d’architecture sécurisée par VPN"
 subtitle: "TP Réseau et Sécurité - IUT St Malo"
-date: March 12, 2025
-geometry: margin=1cm
+date: March 13, 2025
+geometry: margin=1.5cm
 ---
 
 > Note : Ce TP nécessite un écran de taille A4 minimum pour une lecture optimale
@@ -34,6 +34,7 @@ Concernant l’insertion de captures d’écrans qui sont fortement conseillées
 -   Elles seront au format bitmap (graphique) si la source de donnée est graphique (capture d’écran de l’environnement graphique des fenêtres Wireshark ou du navigateur)
 -   Elles seront au format texte (simple copier/coller) si la source de donnée est le texte du terminal (vos commandes et leurs résultats, fichiers de configuration commentés, extraits de man page ou de fichiers de logs)
 
+\newpage
 ## Environnement simulé
 
 L’environnement du TP simule le réseau du siège d’une entreprise reliée par VPN à ses succursales à travers un réseau public (ici Internet):
@@ -75,6 +76,7 @@ Contrairement à Linux, FreeBSD nomme ses périphériques selon leur pilote:
 - fxp0 : Carte réseau Intel EtherExpress PRO/100
 - em1 : Deuxième carte réseau Intel Pro/1000
 
+\newpage
 Exemple de sortie de la commande `ifconfig em0` :
 ```
 [etudiant@routeur]~>ifconfig em0
@@ -128,6 +130,7 @@ Logiciels additionnels:
 
 **Important** : N’utilisez le compte root que lorsque c’est nécessaire (modification de configuration système ou lancement de services).
 
+\newpage
 ### Éditeurs de texte
 
 FreeBSD propose par défaut deux éditeurs de texte :
@@ -185,9 +188,8 @@ Il est possible d’afficher et modifier le contenu du fichier `/etc/rc.conf` sa
 -   Démarre un service: `service NOM-DU-SERVICE start`
 -   Affiche la liste des variables modifiées: `sysrc -a`
 
-Commencer par activer et démarrer le daemon SSH :
-
-Deux possibilités:
+\newpage
+Commencer par activer et démarrer le daemon SSH, pour cela deux possibilités:
 
 - Éditer le fichier `/etc/rc.conf` et y ajouter la ligne `sshd_enable="YES"`
 - Ou utiliser la commande `service sshd enable` (qui reviendra à faire la même chose que l’étape 1)
@@ -233,6 +235,7 @@ Une interface virtuelle est une interface logique qui dans notre cas sert à rep
 
 : Questions
 
+\newpage
 # Exercice : Mise en place de la maquette
 
 ## Schéma complet
@@ -319,6 +322,7 @@ service rtadvd restart
 
 *Appelez-les tuteurs pour qu’ils valident l’état de votre maquette et qu’ils vous transfèrent vos clés SSH et certificats OpenVPN dans le dossier /home/etudiant/.*
 
+\newpage
 # Exercice : Tunnel GIF - Encapsulation IP dans IP
 
 Cette méthode utilise le protocole GIF (RFC2893 : encapsulation de datagramme IP dans IP sans chiffrement) pour créer un VPN :
@@ -354,6 +358,7 @@ Une fois le paramétrage IP terminé, à partir du navigateur du PC « poste de 
 
 *Appelez-les tuteurs pour qu’ils valident l’état de votre maquette.*
 
+\newpage
 # Exercice : Client SSH - Protection de flux TCP
 
 *Détruire les interfaces GIF si elles sont actives avant de réaliser les exercices OpenVPN.*
@@ -395,6 +400,8 @@ Le PC « routeur » va lancer un tunnel SSH à destination du Concentrateur SSH/
 2.  Protéger votre clé privé pour que personne d’autre que votre utilisateur ne puisse y accéder par la commande `chmod 600 id_rsa`. Le client SSH vérifiera les droits d’accès et refusera d’utiliser une clé dont les permissions d’accès ne sont pas assez restrictives;
 3.  Lancer la commande suivante (sur une seule ligne) : `ssh -N -L8080:172.16.254.1:80 -g -i /chemin/votre.clé ssh succursale_BIN@2.2.2.254`
 4.  Puis vérifier le fonctionnement en lançant un navigateur à partir de votre PC « poste de travail » à destination de votre routeur SSH/VPN sur son port 8080 : http://172.16.BIN.254:8080 et/ou http://\[fc00:BIN::254\]:8080
+
+\newpage
 
 ----  --------------------------------------------------------------------------------------------
  18   À l’aide de la commande man ssh, décrivez le rôle de chacun des paramètres utilisés dans
@@ -527,12 +534,18 @@ Vérifiez ensuite que vous avez accès au serveur Web du siège et mettez en év
 
 Le premier usage d’un tunnel VPN est de connecter un poste nomade aux ressources internes de l’entreprise. Il s’agit du paramétrage le plus simple d’OpenVPN et c’est celui indiqué dans les fichiers d’exemples:
 
+\centering
 ![Postes nomades](schemas/OpenVPN-roadwarrior.png){width=30%}
+\raggedright
+\flushleft
 
 Vous remarquerez que cette utilisation ne répond pas exactement à notre besoin qui est plus complexe : Nous souhaitons interconnecter 2 réseaux IP entre eux et pas simplement donner l’accès à un poste nomade.
 Nous devons donc paramétrer le serveur OpenVPN pour identifier le site qui se connecte (en utilisant l’attribue « Common Name » du certificat SSL qui est unique pour chaque client) pour pouvoir installer les routes correspondantes aux réseaux IP de ce client :
 
+\centering
 ![LAN to LAN](schemas/OpenVPN-LAN2LAN.png){width=50%}
+\raggedright
+\flushleft
 
 ## Génération des certificats
 
@@ -628,11 +641,11 @@ Demandez au binôme voisin de s’y connecter, puis une fois connecté vérifiez
 
 # Annexe
 
-## Vos retours sur comment améliorer ce sujet
+## Retours d'expérience et suggestions d'amélioration
 
-Ajoutez à la fin de votre rapport, vos idées et remarques d’amélioration de ce sujet comme par exemples:
+Afin d'améliorer continuellement la qualité de ce TP, nous vous invitons à partager vos observations et suggestions dans votre rapport. Voici des exemples de points sur lesquels nous souhaiterions avoir vos retours :
 
-  - Quel sont les questions qui manquent de précision ou d’explication de contexte
-  - Quelles sont les erreurs dans les commandes données en exemple
-  - Que doit améliorer le professeur dans sa pédagogique ou lors de ses assistances pour vous débloquer?
-  - Autre
+- Identifiez les questions nécessitant des précisions ou un meilleur contexte
+- Signalez les passages techniques qui mériteraient plus d'explications
+- Proposez des améliorations pour la structure du document ou pour l’accompagnement pendant les exercices
+- Partagez toute autre idée ou remarque permettant d'améliorer ce TP
