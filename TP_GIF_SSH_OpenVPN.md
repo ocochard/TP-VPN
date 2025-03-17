@@ -262,7 +262,7 @@ Nous allons commencer par le plus simple qui est le paramétrage IP du PC « pos
 1.  Identifier les interfaces Ethernet correspondantes à votre maquette;
 2.  Configurer les adresses IP sur l’interface Ethernet reliée au « PC routeur »;
 3.  Déclarer la (les?) route(s) par défaut;
-4.  Désactiver l’émission de requête IPv6 RA et AUTOCONF sur l’interface Ethernet utilisée comme sonde par les commandes
+4.  Désactiver l’émission de requête IPv6 RA et AUTOCONF sur l’interface Ethernet utilisée comme sonde (et UNIQUEMENT l’interface utilisée par wireshark) par les commandes
     `sysctl net.ipv6.conf.eth??.accept_ra=0` et `sysctl net.ipv6.conf.eth??.autoconf=0`;
 5.  Lancer la capture de trafic sur l’interface Ethernet utilisée comme sonde ;
 
