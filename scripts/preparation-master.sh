@@ -65,6 +65,8 @@ fi
 sysrc -x dumpdev
 sed -i "" '/dumpdev/d' /etc/rc.conf
 
+# Que fait la desactivation de la souris ?
+sysrc -x moused_nondefault_enable
 # Suppression de la configuration reseau
 rm /etc/resolv.conf
 sysrc -x ifconfig_em0_ipv6 || true
