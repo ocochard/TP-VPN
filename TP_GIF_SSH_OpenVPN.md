@@ -61,7 +61,7 @@ On le retrouve ainsi par exemple dans :
 
 Vous disposez de plusieurs consoles virtuelles :
 
-- Utilisez les touches Ctrl+F1, F2, F3, etc. pour passer de l’une à l’autre
+- Utilisez les touches Alt+F1, F2, F3, etc. pour passer de l’une à l’autre
 - Pour consulter l’historique d’une console :
   1. Appuyez sur la touche "Arrêt défilement" pour stopper le défilement
   2. Utilisez les touches Page Précédente/Suivante pour naviguer
