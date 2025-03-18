@@ -9,6 +9,8 @@ geometry: margin=1.5cm
 
 > Note : Ce TP nécessite un écran de taille A4 minimum pour une lecture optimale
 
+TODO: vnet au niveau du concentrateur pour ajouter un routeur Internet et forcer les élèves a déclarer une route par défaut. Va de plus, éviter le routage asymétrique fonctionnel dans le cas ou ils configure cette route par défaut actuellement.
+
 # Présentation
 
 Ce TP se découpe en plusieurs exercices du plus simple au plus complexe, tous présentant différentes méthodes pour mettre en place un VPN (interconnexion de réseau privé au-dessus d’un réseau public) :
