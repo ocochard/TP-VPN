@@ -3,7 +3,7 @@ author: Olivier Cochard-Labbé
 lang: fr
 title: "Déploiement et recette d’architecture sécurisée par VPN"
 subtitle: "TP Réseau et Sécurité - IUT St Malo"
-date: March 13, 2025
+date: March 18, 2025
 geometry: margin=1.5cm
 ---
 
