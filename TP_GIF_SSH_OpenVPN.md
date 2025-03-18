@@ -398,7 +398,7 @@ Le PC « routeur » va lancer un tunnel SSH à destination du Concentrateur SSH/
 
 1.  Vérifiez que vous travaillez bien sous le compte simple utilisateur et non pas root;
 2.  Protéger votre clé privé pour que personne d’autre que votre utilisateur ne puisse y accéder par la commande `chmod 600 id_rsa`. Le client SSH vérifiera les droits d’accès et refusera d’utiliser une clé dont les permissions d’accès ne sont pas assez restrictives;
-3.  Lancer la commande suivante (sur une seule ligne) : `ssh -N -L8080:172.16.254.1:80 -g -i /chemin/votre.clé ssh succursale_BIN@2.2.2.254`
+3.  Lancer la commande suivante (sur une seule ligne) : `ssh -N -L8080:172.16.254.1:80 -g -i /chemin/votre.clé.ssh succursale_BIN@2.2.2.254`
 4.  Puis vérifier le fonctionnement en lançant un navigateur à partir de votre PC « poste de travail » à destination de votre routeur SSH/VPN sur son port 8080 : http://172.16.BIN.254:8080 et/ou http://\[fc00:BIN::254\]:8080
 
 \newpage
