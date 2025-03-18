@@ -30,9 +30,6 @@ export ASSUME_ALWAYS_YES
 pkg bootstrap
 pkg install -y ca_root_nss tmux openvpn mohawk w3m vim-tiny nano en-freebsd-doc
 
-# Configuration du dossier PKI pour easyrsa
-echo 'set_var EASYRSA_PKI             "$EASYRSA/pki"' >> /usr/local/share/easy-rsa/vars
-
 cat <<EOF > /etc/motd.template
 
 Bienvenu sur FreeBSD!

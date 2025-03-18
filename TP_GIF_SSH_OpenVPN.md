@@ -552,11 +552,11 @@ Nous devons donc paramétrer le serveur OpenVPN pour identifier le site qui se c
 Cet exercice va vous demander de créer votre propre autorité de certification et donc de générer votre fichier ca.crt : Attention de ne pas mélanger ce nouveau avec celui de l’exercice précédent car ils portent le même nom. De plus, lors de la copie scp, vérifiez que vous n’écrasez pas un fichier déjà existant sur la machine du binôme voisin.
 
 Générer les répertoires de clé avec la commande `easyrsa init-pki`.
-Cette commande va créer le répertoire `/usr/local/share/easy-rsa/pki` qui contiendra l’ensemble des certificats que vous allez créer.
+Cette commande va créer le répertoire `pki/` qui contiendra l’ensemble des certificats que vous allez créer.
 
 Lancer le pré calcul des données pour l’algorithme de Diffie-Hellman qui servira à l’échange de clefs par la suite par la commande `easyrsa gen-dh`.
 
-Puis exécutez le script `easyrsa build-ca nopass` et examinez le contenu du répertoire `/usr/local/share/easy-rsa/pki/`.
+Puis exécutez le script `easyrsa build-ca nopass` et examinez le contenu du répertoire `pki/`.
 
 ----  --------------------------------------------------------------------------------------------
  32   Quels sont les fichiers créés suite à cette commande ? Détaillez leur fonction
@@ -565,7 +565,7 @@ Puis exécutez le script `easyrsa build-ca nopass` et examinez le contenu du ré
 
 : Question
 
-Exécutez le script `easyrsa build-server-full NOM-DE-VOTRE-ROUTEUR nopass` puis examinez le contenu du répertoire pki/.
+Exécutez le script `easyrsa build-server-full NOM-DE-VOTRE-ROUTEUR nopass` puis examinez le contenu du répertoire `pki/`.
 
 ----  --------------------------------------------------------------------------------------------
  33   Quels sont les fichiers créés suite à cette commande ? Détaillez leur fonction
