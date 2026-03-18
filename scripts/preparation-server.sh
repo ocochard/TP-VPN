@@ -5,6 +5,7 @@ set -eu
 BIN_MAX=20
 USER_FILE="/tmp/user.table"
 EASYRSA_PKI="/usr/local/share/easy-rsa/pki"; export EASYRSA_PKI
+IF_INTERNET="em1"
 
 # A usefull function (from: http://code.google.com/p/sh-die/)
 die() { echo -n "EXIT: " >&2; echo "$@" >&2; exit 1; }
@@ -75,7 +76,7 @@ keepalive 10 120
 EOF
 
 ### Users main loop
-for i in `jot $BIN_MAX`; do
+for i in $(jot $BIN_MAX); do
 	if [ ! -f /home/succursale_${i}/.ssh/authorized_keys ]; then
 		su -l succursale_${i} -c 'ssh-keygen -b 4096 -f /home/$USER/.ssh/id_rsa -N ""'
 	fi
@@ -116,9 +117,25 @@ EOF
 
 done
 
+### Routeur virtuel devant le concentrateur VPN
+
+cat <<EOF > /etc/jail.conf.d/routeur.conf
+routeur {
+  host.hostname = routeur;
+  persist;
+  vnet;
+  vnet.interface = "${IF_INTERNET}";
+  vnet.interface += "epair0a";
+  exec.start = "/sbin/ifconfig -l";
+  exec.start += "/sbin/ifconfig ${IF_INTERNET} inet 2.2.2.254/24 up";
+  exec.start += "/sbin/ifconfig epair0a inet 3.3.3.1/24 up";
+  exec.start += "/sbin/sysctl net.inet.ip.forwarding=1";
+}
+EOF
+
 ### Serveur virtuel derriere le concentrateur VPN et Tunnels GIFs
-CLONED_IF_LIST="tap99"
-for i in `jot $BIN_MAX`; do
+CLONED_IF_LIST="tap99 epair0"
+for i in $(jot $BIN_MAX); do
 	CLONED_IF_LIST="${CLONED_IF_LIST} gif${i}"
 	sysrc ifconfig_gif${i}="inet 192.168.${i}.1/31 192.168.${i}.2 tunnel 2.2.2.254 2.2.2.${i} up"
 	sysrc ifconfig_gif${i}_ipv6="inet6 fc00:bad:cafe:${i}::1 prefixlen 64"
@@ -126,8 +143,11 @@ done
 sysrc cloned_interfaces="${CLONED_IF_LIST}"
 sysrc ifconfig_tap99="inet 172.16.254.1/24"
 sysrc ifconfig_tap99_ipv6="inet6 fc00:dead:beef::1 prefixlen 64"
-sysrc ifconfig_em1="inet 2.2.2.254/24"
-
+sysrc ifconfig_em1="up"
+sysrc ifconfig_epair0a="up"
+sysrc ifconfig_epair0b="inet 3.3.3.254/24"
+sysrc defaultrouter="3.3.3.1"
+sysrc jail_list="routeur"
 service netif restart && \
   echo "Meet a problem for restarting/generating new interface"
 
@@ -136,7 +156,7 @@ sysrc ipv6_activate_all_interfaces="YES"
 sysrc gateway_enable="YES"
 sysrc ipv6_gateway_enable="YES"
 service routing restart && echo "Meet a problem for starting routing"
-
+service jail restart && echo "Meet a problem for starting jail"
 ### Serveur SSH configuration
 if ! grep -q "UseDNS no" /etc/ssh/sshd_config; then
 	cat <<EOF >>/etc/ssh/sshd_config
@@ -189,19 +209,6 @@ service sshd restart && \
 sysrc openvpn_enable="YES"
 service openvpn restart && \
   echo "Warning: Can t reload openvpn"
-
-cat >/etc/ipfw.rules <<EOF
-#!/bin/sh
-/sbin/ipfw -f flush
-/sbin/ipfw add allow ip from 2.2.2.0/24 to any recv em1
-/sbin/ipfw add deny ip any to any recv em1
-/sbin/ipfw add allow ip from any to any
-EOF
-
-echo "Starting firewall on em1"
-sysrc firewall_enable=YES
-sysrc firewall_script="/etc/ipfw.rules"
-service ipfw start || echo "Error trying to start firewall"
 
 echo "WARNING: NEED TO CHANGE ROOT password now!"
 

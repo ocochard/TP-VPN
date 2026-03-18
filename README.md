@@ -12,7 +12,7 @@ Ce TP vous permettra de :
 
 ## Environnement de Travail
 
-Le TP s'effectue sur FreeBSD 14.2, un système d'exploitation Unix libre. Vous utiliserez une image système préparée spécifiquement pour ce TP.
+Le TP s'effectue sur FreeBSD 15.0, un système d'exploitation Unix libre. Vous utiliserez une image système préparée spécifiquement pour ce TP.
 
 ### Image Système Préparée
 

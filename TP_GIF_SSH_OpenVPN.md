@@ -3,13 +3,11 @@ author: Olivier Cochard-Labbé
 lang: fr
 title: "Déploiement et recette d’architecture sécurisée par VPN"
 subtitle: "TP Réseau et Sécurité - IUT St Malo"
-date: March 18, 2025
+date: March 16, 2026
 geometry: margin=1.5cm
 ---
 
 > Note : Ce TP nécessite un écran de taille A4 minimum pour une lecture optimale
-
-TODO: vnet au niveau du concentrateur pour ajouter un routeur Internet et forcer les élèves a déclarer une route par défaut. Va de plus, éviter le routage asymétrique fonctionnel dans le cas ou ils configure cette route par défaut actuellement.
 
 # Présentation
 
@@ -22,14 +20,12 @@ Ce TP se découpe en plusieurs exercices du plus simple au plus complexe, tous p
 5.  Configuration d’un client OpenVPN authentifié par certificats
 6.  Configuration d’un serveur OpenVPN et la création/répudiation de certificat (exercice par paire de binôme)
 
-## Grille de notation
+## Notation
 
-La notation de votre rapport se fera sur les critères suivants:
+La notation principale se fera oralement lors de plusieurs entretiens pendant votre TP, et vous aurez la possibilité de vous ratrapper par la remise de votre rapport qui se fera sur les critères suivants:
 
 1.  La documentation de l’ensemble de vos actions (40%). Ce qui inclut la description des commandes passées pour la préparation de vos environnements, le nettoyage éventuellement nécessaire entre les différents exercices, les exercices eux-mêmes et vos résolutions de problèmes rencontrés
 2.  La réponse argumentée aux questions numérotées (60%)
-
-Vous noterez qu’il est donc possible de réussir l’intégralité des exercices proposés, mais au final c’est uniquemement le contenu de votre rapport qui sera noté.
 
 Concernant l’insertion de captures d’écrans qui sont fortement conseillées:
 
@@ -124,6 +120,7 @@ Logiciels additionnels:
 - mohawk : Serveur web léger
 - vim et nano : Éditeurs de texte avancés
 - w3m : Navigateur web en mode texte
+- sudo : permet de passer super utilisateur
 
 **Identifiants de connexion**
 
@@ -133,9 +130,9 @@ Logiciels additionnels:
 **Important** : N’utilisez le compte root que lorsque c’est nécessaire (modification de configuration système ou lancement de services).
 
 \newpage
-### Éditeurs de texte
+### Éditeurs de texte de base
 
-FreeBSD propose par défaut deux éditeurs de texte :
+FreeBSD propose par défaut deux éditeurs de texte (mais utilisez vim ou nano si ceux-ci vous sont plus familiers) :
 
 - `vi` : Éditeur Unix classique mais complexe pour un débutant (si vous ne le connaissez pas, ne perdez pas de temps à le découvrir pendant ce TP) ;
 - `ee` (easy editor) : Éditeur plus simple qui convient mieux aux débutants.
@@ -174,8 +171,7 @@ Pour découvrir les différentes options de ce fichier, inspirez-vous du fichier
 La configuration des paramètres spécifiques à certains daemons se fait dans leurs dossiers relatifs (`/etc/ssh/sshd_config` pour le serveur openssh par exemple).
 
 ----  ----------------------------------------------------------------------
- 01   Quel est l’intérêt d’avoir une séparation nette entre les composants
-      du système d’exploitation et les applications tierces ?
+ 01   Quelle est la différence entre les fichiers contenus dans /etc/ et /usr/local/etc ?
 
 ----  ----------------------------------------------------------------------
 
@@ -301,6 +297,7 @@ ipv6_gateway_enable="??"
 ifconfig_??_ipv6="inet6 ?? prefixlen ??"
 rtadvd_enable="??"
 rtadvd_interfaces="??"
+defaultrouter="??"
 ```
 
 Une fois le fichier modifié, relancez les services impactés :
@@ -335,7 +332,7 @@ Référez-vous à la man page GRE plutôt que celle de GIF pour les explications
 ```
 cloned_interfaces="gif0"
 ifconfig_gif0="inet INNER-LOCAL-IP INNER-REMOTE-IP tunnel OUTER-LOCAL-IP OUTER-REMOTE-IP up"
-ifconfig_gif0_ipv6="???"
+ifconfig_gif0_ipv6="inet6 ???"
 ```
 Ne pas oublier la déclaration des routes statiques pour atteindre le
 réseau du siège.
@@ -358,12 +355,12 @@ Une fois le paramétrage IP terminé, à partir du navigateur du PC « poste de 
 
 : Questions
 
-*Appelez-les tuteurs pour qu’ils valident l’état de votre maquette.*
+*Appelez-les tuteurs pour l’interogaton et la validation de l’état de votre maquette.*
 
 \newpage
 # Exercice : Client SSH - Protection de flux TCP
 
-*Détruire les interfaces GIF si elles sont actives avant de réaliser les exercices OpenVPN.*
+Détruire les interfaces GIF par `ifconfig gif0 destroy` si elles sont actives avant de réaliser les exercices OpenVPN.
 
 Cet exercice présente une première utilisation de SSH par la protection de flux TCP. L’administrateur réseau du siège a réalisé deux actions :
 

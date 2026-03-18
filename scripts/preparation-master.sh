@@ -6,7 +6,7 @@ sysrc keymap="fr.acc.kbd"
 
 EASYRSA_DIR="/usr/local/share/easy-rsa"
 
-# Acceleration du temps de demarage
+# Acceleration du temps de démarrage
 sysrc -f /boot/loader.conf autoboot_delay="1"
 #echo 'hw.vga.textmode=0' >> /boot/loader.conf
 #sysrc -f /boot/loader.conf i915kms_load="YES"
@@ -28,7 +28,9 @@ echo "Installation des packages"
 ASSUME_ALWAYS_YES=yes
 export ASSUME_ALWAYS_YES
 pkg bootstrap
-pkg install -y ca_root_nss tmux openvpn mohawk w3m vim-tiny nano en-freebsd-doc
+pkg install -y ca_root_nss tmux openvpn mohawk w3m vim-tiny nano en-freebsd-doc sudo
+
+echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /usr/local/etc/sudoers.d/wheel
 
 cat <<EOF > /etc/motd.template
 
@@ -62,8 +64,6 @@ fi
 sysrc -x dumpdev
 sed -i "" '/dumpdev/d' /etc/rc.conf
 
-# Que fait la desactivation de la souris ?
-sysrc -x moused_nondefault_enable
 # Suppression de la configuration reseau
 rm /etc/resolv.conf
 sysrc -x ifconfig_em0_ipv6 || true
