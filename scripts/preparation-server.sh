@@ -148,6 +148,7 @@ sysrc ifconfig_epair0a="up"
 sysrc ifconfig_epair0b="inet 3.3.3.254/24"
 sysrc defaultrouter="3.3.3.1"
 sysrc jail_list="routeur"
+service jail enable
 service netif restart && \
   echo "Meet a problem for restarting/generating new interface"
 
@@ -155,8 +156,8 @@ service netif restart && \
 sysrc ipv6_activate_all_interfaces="YES"
 sysrc gateway_enable="YES"
 sysrc ipv6_gateway_enable="YES"
-service routing restart && echo "Meet a problem for starting routing"
-service jail restart && echo "Meet a problem for starting jail"
+service routing restart || echo "Meet a problem for starting routing"
+service jail start || echo "Meet a problem for starting jail"
 ### Serveur SSH configuration
 if ! grep -q "UseDNS no" /etc/ssh/sshd_config; then
 	cat <<EOF >>/etc/ssh/sshd_config
@@ -199,15 +200,15 @@ EOF
 fi
 
 sysrc mohawk_enable="YES"
-service mohawk restart && \
+service mohawk restart || \
   echo "Warning: Can t restart WWW server!"
 
 sysrc sshd_enable="YES"
-service sshd restart && \
+service sshd restart || \
   echo "Warning: Can t reload sshd"
 
 sysrc openvpn_enable="YES"
-service openvpn restart && \
+service openvpn restart || \
   echo "Warning: Can t reload openvpn"
 
 echo "WARNING: NEED TO CHANGE ROOT password now!"
